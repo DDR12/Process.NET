@@ -101,17 +101,17 @@ namespace Process.NET.Native.Types
         /// <summary>
         ///     The information about a simulated mouse event.
         /// </summary>
-        [FieldOffset(sizeof (int))] public MouseInput Mouse;
+        [FieldOffset(sizeof(int))] public MouseInput Mouse;
 
         /// <summary>
         ///     The information about a simulated keyboard event.
         /// </summary>
-        [FieldOffset(sizeof (int))] public KeyboardInput Keyboard;
+        [FieldOffset(sizeof(int))] public KeyboardInput Keyboard;
 
         /// <summary>
         ///     The information about a simulated hardware event.
         /// </summary>
-        [FieldOffset(sizeof (int))] public HardwareInput Hardware;
+        [FieldOffset(sizeof(int))] public HardwareInput Hardware;
     }
 
     /// <summary>
@@ -380,6 +380,7 @@ namespace Process.NET.Native.Types
         ///     The process id which owns the thread.
         /// </summary>
         public IntPtr UniqueProcess;
+
         /// <summary>
         ///     The thread id.
         /// </summary>

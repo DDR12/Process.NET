@@ -126,6 +126,10 @@ namespace Process.NET
         /// <returns>IPointer.</returns>
         public IPointer this[IntPtr intPtr] => new MemoryPointer(this, intPtr);
 
+        protected bool IsDisposed { get; set; }
+        protected bool MustBeDisposed { get; set; } = true;
+
+
         /// <summary>
         ///     Releases unmanaged and - optionally - managed resources.
         /// </summary>
@@ -133,14 +137,17 @@ namespace Process.NET
         {
             //TODO Consider adding a null check here, or a nasty crash deadlock can make it in here occasionally.
             //TODO followup: did the invoke threadsafety characterstics fix the deadlock?
-            OnDispose?.Invoke(this, EventArgs.Empty);
-
-            ThreadFactory?.Dispose();
-            ModuleFactory?.Dispose();
-            MemoryFactory?.Dispose();
-            WindowFactory?.Dispose();
-            Handle?.Close();
-            GC.SuppressFinalize(this);
+            if (!IsDisposed)
+            {
+                IsDisposed = true;
+                OnDispose?.Invoke(this, EventArgs.Empty);
+                ThreadFactory?.Dispose();
+                ModuleFactory?.Dispose();
+                MemoryFactory?.Dispose();
+                WindowFactory?.Dispose();
+                Handle?.Close();
+                GC.SuppressFinalize(this);
+            }
         }
 
         /// <summary>
@@ -163,7 +170,10 @@ namespace Process.NET
 
         ~ProcessSharp()
         {
-            Dispose();
+            if (MustBeDisposed)
+            {
+                Dispose();
+            }
         }
     }
 }

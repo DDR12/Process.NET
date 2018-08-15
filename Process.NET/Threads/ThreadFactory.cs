@@ -114,7 +114,8 @@ namespace Process.NET.Threads
         /// <param name="isStarted">Sets if the thread must be started just after being created.</param>
         /// <returns>A new instance of the <see cref="RemoteThread" /> class.</returns>
         public IRemoteThread Create(IntPtr address, bool isStarted = true)
-        {   //Create the thread
+        {
+            //Create the thread
             var ret = ThreadHelper.NtQueryInformationThread(
                 ThreadHelper.CreateRemoteThread(Process.Handle, address, IntPtr.Zero, ThreadCreationFlags.Suspended));
 
