@@ -96,6 +96,7 @@
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\ProcessModuleExtensions.cs" />
     <Compile Include="IProcess.cs" />
+    <Compile Include="Memory\MemoryType.cs" />
     <Compile Include="Patterns\PatternScanner.cs" />
     <Compile Include="ProcessSharp.cs" />
     <Compile Include="Windows\Keyboard\KeyboardHookEventArgs.cs" />

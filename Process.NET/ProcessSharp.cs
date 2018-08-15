@@ -19,7 +19,8 @@ namespace Process.NET
         ///     Initializes a new instance of the <see cref="ProcessSharp" /> class.
         /// </summary>
         /// <param name="native">The native process.</param>
-        public ProcessSharp(System.Diagnostics.Process native)
+        /// <param name="type">The type of memory being manipulated.</param>
+        public ProcessSharp(System.Diagnostics.Process native, MemoryType type)
         {
             native.EnableRaisingEvents = true;
 
@@ -32,6 +33,18 @@ namespace Process.NET
             Native = native;
 
             Handle = MemoryHelper.OpenProcess(ProcessAccessFlags.AllAccess, Native.Id);
+
+            switch (type)
+            {
+                case MemoryType.Local:
+                    Memory = new LocalProcessMemory(Handle);
+                    break;
+                case MemoryType.Remote:
+                    Memory = new ExternalProcessMemory(Handle);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
 
             native.ErrorDataReceived += OutputDataReceived;
             native.OutputDataReceived += OutputDataReceived;
@@ -46,16 +59,23 @@ namespace Process.NET
         /// Initializes a new instance of the <see cref="ProcessSharp"/> class.
         /// </summary>
         /// <param name="processName">Name of the process.</param>
-        public ProcessSharp(string processName) : this(ProcessHelper.FromName(processName))
+        /// <param name="type">The type of memory being manipulated.</param>
+        public ProcessSharp(string processName, MemoryType type) : this(ProcessHelper.FromName(processName), type)
         {
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessSharp"/> class.
         /// </summary>
         /// <param name="processId">The process id of the process to open with all rights.</param>
-        public ProcessSharp(int processId) : this(ProcessHelper.FromProcessId(processId))
+        /// <param name="type">The type of memory being manipulated.</param>
+        public ProcessSharp(int processId, MemoryType type) : this(ProcessHelper.FromProcessId(processId), type)
         {
         }
+
+        /// <summary>
+        /// Raises when the <see cref="ProcessSharp"/> object is disposed.
+        /// </summary>
+        public event EventHandler OnDispose;
 
         /// <summary>
         ///     Class for reading and writing memory.
@@ -112,12 +132,14 @@ namespace Process.NET
         public virtual void Dispose()
         {
             //TODO Consider adding a null check here, or a nasty crash deadlock can make it in here occasionally.
-            // followup: did the invoke threadsafety characterstics fix the deadlock?
+            //TODO followup: did the invoke threadsafety characterstics fix the deadlock?
+            OnDispose?.Invoke(this, EventArgs.Empty);
+
             ThreadFactory?.Dispose();
             ModuleFactory?.Dispose();
             MemoryFactory?.Dispose();
             WindowFactory?.Dispose();
-            Handle.Close();
+            Handle?.Close();
             GC.SuppressFinalize(this);
         }
 
@@ -136,7 +158,7 @@ namespace Process.NET
 
         private static void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Trace.Write(e.Data);
+            Trace.WriteLine(e.Data);
         }
 
         ~ProcessSharp()

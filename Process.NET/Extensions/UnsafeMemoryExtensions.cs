@@ -15,6 +15,12 @@ namespace Process.NET.Extensions
             return (vftable + functionIndex * IntPtr.Size).Read<IntPtr>();
         }
 
+        //public static IntPtr GetVtableIntPtr2(this IntPtr intPtr, int functionIndex)
+        //{
+        //    var vftable = MemoryHelper.InternalRead<IntPtr>(intPtr);
+        //    return MemoryHelper.InternalRead<IntPtr>(vftable + functionIndex * IntPtr.Size);
+        //}
+
         // Converts an unmanaged delegate to a function pointer.
         public static IntPtr ToFunctionPtr(this Delegate d)
         {
@@ -24,6 +30,10 @@ namespace Process.NET.Extensions
         // Converts an unmanaged function pointer to the given delegate type.
         public static T ToDelegate<T>(this IntPtr addr) where T : class
         {
+            if (addr == null)
+            {
+                return null;
+            }
             if (typeof (T).GetCustomAttributes(typeof (UnmanagedFunctionPointerAttribute), true).Length == 0)
                 throw new InvalidOperationException(
                     "This operation can only convert to delegates adorned with the UnmanagedFunctionPointerAttribute");
@@ -50,6 +60,7 @@ namespace Process.NET.Extensions
                         {
                             var o = default(T);
                             var ptr = MarshalCache<T>.GetUnsafePtr(ref o);
+                            //TODO: movememory allocates on the fly, move memory does not (josh thinks. needs confirmation)
                             Kernel32.MoveMemory(ptr, (void*)address, MarshalCache<T>.Size);
                             return o;
                         }

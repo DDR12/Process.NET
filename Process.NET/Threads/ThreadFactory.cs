@@ -93,9 +93,10 @@ namespace Process.NET.Threads
                     ThreadCreationFlags.Suspended));
 
             // Find the managed object corresponding to this thread
-            // TODO (int) cast may be unnecessary and/or problematic. Suggest coming back for proper fix later
+            //TODO (int) cast may be unnecessary and/or problematic. Suggest coming back for proper fix later
             var result = new RemoteThread(Process, NativeThreads.First(t => t.Id == (int)ret.ClientId.UniqueThread),
                 marshalledParameter);
+            //var result = new RemoteThread(Process, Process.ThreadFactory.NativeThreads.First(t => t.Id == ret.ThreadId), marshalledParameter);
 
             // If the thread must be started
             if (isStarted)
@@ -113,15 +114,14 @@ namespace Process.NET.Threads
         /// <param name="isStarted">Sets if the thread must be started just after being created.</param>
         /// <returns>A new instance of the <see cref="RemoteThread" /> class.</returns>
         public IRemoteThread Create(IntPtr address, bool isStarted = true)
-        {
-            //Create the thread
+        {   //Create the thread
             var ret = ThreadHelper.NtQueryInformationThread(
-                ThreadHelper.CreateRemoteThread(Process.Handle, address, IntPtr.Zero,
-                    ThreadCreationFlags.Suspended));
+                ThreadHelper.CreateRemoteThread(Process.Handle, address, IntPtr.Zero, ThreadCreationFlags.Suspended));
 
             // Find the managed object corresponding to this thread
-            // TODO (int) cast may be unnecessary and/or problematic. Suggest coming back for proper fix later
+            //TODO (int) cast may be unnecessary and/or problematic. Suggest coming back for proper fix later
             var result = new RemoteThread(Process, NativeThreads.First(t => t.Id == (int)ret.ClientId.UniqueThread));
+            //var result = new RemoteThread(Process, Process.ThreadFactory.NativeThreads.First(t => t.Id == ret.ClientId));
 
             // If the thread must be started
             if (isStarted)

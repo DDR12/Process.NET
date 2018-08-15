@@ -383,6 +383,10 @@ namespace Process.NET.Native
             return hookId;
         }
 
+
+        [DllImport("User32.dll")]
+        public static extern short GetAsyncKeyState(int vKey);
+
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
         internal static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
 

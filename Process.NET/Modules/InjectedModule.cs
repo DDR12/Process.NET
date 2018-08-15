@@ -44,7 +44,7 @@ namespace Process.NET.Modules
                 IsDisposed = true;
                 // Eject the module
                 Process.ModuleFactory.Eject(this);
-                // Avoid the finalizer 
+                // Avoid the finalizer
                 GC.SuppressFinalize(this);
             }
         }
@@ -70,22 +70,26 @@ namespace Process.NET.Modules
         internal static InjectedModule InternalInject(IProcess memorySharp, string path)
         {
             // Call LoadLibraryA remotely
-            var thread = memorySharp.ThreadFactory.CreateAndJoin(memorySharp["kernel32"]["LoadLibraryA"].BaseAddress,
-                path);
+            var thread = memorySharp.ThreadFactory.CreateAndJoin(memorySharp["kernel32"]["LoadLibraryA"].BaseAddress, path);
+
             // Get the inject module
-            if (IntPtr.Size == 4)
-            {
-                if (thread.GetExitCode<IntPtr>() != IntPtr.Zero)
-                    return new InjectedModule(memorySharp,
-                        memorySharp.ModuleFactory.NativeModules.First(m => m.BaseAddress == thread.GetExitCode<IntPtr>()));
-            }
-            else if (IntPtr.Size == 8)
-            {
-                // GetExitCode is not accurate on x64, it returns a DWORD so result is truncated
-                // This is a crude method, and probably shouldnt be relied upon.
-                if (thread.GetExitCode<IntPtr>() != IntPtr.Zero)
-                    return new InjectedModule(memorySharp, memorySharp.ModuleFactory.NativeModules.First(m => m.FileName == path));
-            }
+            //if (IntPtr.Size == 4)
+            //{
+            //    if (thread.GetExitCode<IntPtr>() != IntPtr.Zero)
+            //        return new InjectedModule(memorySharp,
+            //            memorySharp.ModuleFactory.NativeModules.First(m => m.BaseAddress == thread.GetExitCode<IntPtr>()));
+            //}
+            //else if (IntPtr.Size == 8)
+            //{
+            //    // GetExitCode is not accurate on x64, it returns a DWORD so result is truncated
+            //    // This is a crude method, and probably shouldnt be relied upon.
+            //    if (thread.GetExitCode<IntPtr>() != IntPtr.Zero)
+            //        return new InjectedModule(memorySharp,
+            //            memorySharp.ModuleFactory.NativeModules.First(m => m.FileName == path));
+            //}
+            if (thread.GetExitCode<IntPtr>() != IntPtr.Zero)
+                return new InjectedModule(memorySharp,
+                    memorySharp.ModuleFactory.NativeModules.First(m => m.BaseAddress == thread.GetExitCode<IntPtr>()));
             return null;
         }
     }
