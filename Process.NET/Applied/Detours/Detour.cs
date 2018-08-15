@@ -45,20 +45,29 @@ namespace Process.NET.Applied.Detours
             Original.AddRange(memory.Read(Target, 6));
 
             //Setup the detour bytes
-            if (Environment.Is64BitProcess)
-            {
-                New = new List<byte> { 0x68 };
-                var tmp = BitConverter.GetBytes(HookPointer.ToInt64());
-                New.AddRange(tmp);
-                New.Add(0xC3);
-            }
-            else
-            {
-                New = new List<byte> { 0x68 };
-                var tmp = BitConverter.GetBytes(HookPointer.ToInt32());
-                New.AddRange(tmp);
-                New.Add(0xC3);
-            }
+            New = new List<byte> { 0x68 };
+
+            var bytes = IntPtr.Size == 4 ? BitConverter.GetBytes(HookPointer.ToInt32()) :
+                BitConverter.GetBytes(HookPointer.ToInt64());
+
+            New.AddRange(bytes);
+            New.Add(0xC3);
+
+            //TODO come back and clean this up if desired
+            //if (Environment.Is64BitProcess)
+            //{
+            //    New = new List<byte> { 0x68 };
+            //    var tmp = BitConverter.GetBytes(HookPointer.ToInt64());
+            //    New.AddRange(tmp);
+            //    New.Add(0xC3);
+            //}
+            //else
+            //{
+            //    New = new List<byte> { 0x68 };
+            //    var tmp = BitConverter.GetBytes(HookPointer.ToInt32());
+            //    New.AddRange(tmp);
+            //    New.Add(0xC3);
+            //}
         }
 
         /// <summary>
