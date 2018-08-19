@@ -43,7 +43,8 @@ namespace Process.NET.Applied.Detours
         ///     A <see cref="Detour" /> object containing the required methods to apply, remove, and call the original
         ///     function.
         /// </returns>
-        public Detour Create(Delegate target, Delegate newTarget, string name, bool ignoreAntiCheatRules = false, bool fastCall = false)
+        public Detour Create(Delegate target, Delegate newTarget, string name, bool ignoreAntiCheatRules = false,
+            bool fastCall = false, bool x64 = false)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
@@ -63,8 +64,10 @@ namespace Process.NET.Applied.Detours
 
             if (!fastCall)
                 InternalItems[name] = new Detour(target, newTarget, name, ProcessPlus, ignoreAntiCheatRules);
-            if (fastCall)
+            if (fastCall && !x64)
                 InternalItems[name] = new Detour(target, newTarget, name, ProcessPlus, ignoreAntiCheatRules, fastCall);
+            if (fastCall && x64)
+                InternalItems[name] = new Detour(target, newTarget, name, ProcessPlus, ignoreAntiCheatRules, fastCall, x64);
             return InternalItems[name];
         }
 

@@ -21,6 +21,30 @@ namespace Process.NET.Applied.Detours
         // ReSharper disable once NotAccessedField.Local
         private readonly Delegate _hookDelegate;
 
+        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory,
+            bool ignoreRules = false, bool fastCall = true, bool x64 = true)
+        {
+            ProcessMemory = memory;
+            Identifier = identifier;
+            IgnoreRules = ignoreRules;
+
+            TargetDelegate = target;
+            Target = target.ToFunctionPtr();
+
+            _hookDelegate = hook;
+            HookPointer = hook.ToFunctionPtr(); //target
+
+            //Store the original bytes
+            Original = new List<byte>();
+
+            //Setup the detour bytes
+            New = new List<byte> { 0x48, 0xb8 }; // movabs rax
+            var bytes = BitConverter.GetBytes(HookPointer.ToInt64()); // hookptr
+            New.AddRange(bytes);
+            New.AddRange(new byte[] { 0xff, 0xe0 }); // jmp rax
+
+            Original.AddRange(memory.Read(Target, New.Count));
+        }
 
         public Detour(Delegate target, Delegate hook, string identifier, IMemory memory,
             bool ignoreRules = false, bool fastCall = true)
@@ -57,10 +81,9 @@ namespace Process.NET.Applied.Detours
             first.Add(0x50);                    // push eax - retrieve ret addr
 
             //jump to the hook
-            first.Add(0x68);                    // push ...
+            first.Add(0x68);                    // push HookPointer
 
-            var bytes = IntPtr.Size == 4 ? BitConverter.GetBytes(HookPointer.ToInt32()) :
-                BitConverter.GetBytes(HookPointer.ToInt64());
+            var bytes = BitConverter.GetBytes(HookPointer.ToInt32());
 
             first.AddRange(bytes);
             first.Add(0xC3);                    // ret - jump to the detour handler
@@ -69,7 +92,7 @@ namespace Process.NET.Applied.Detours
             ProcessMemory.Write(firstPtr, first.ToArray());
 
             //Setup the detour bytes
-            New = new List<byte> { 0x68 };     //push ...
+            New = new List<byte> { 0x68 };     //push firstPtr
             var bytes2 = IntPtr.Size == 4 ? BitConverter.GetBytes(firstPtr.ToInt32()) :
                 BitConverter.GetBytes(firstPtr.ToInt64());
             New.AddRange(bytes2);
@@ -88,10 +111,9 @@ namespace Process.NET.Applied.Detours
             last.Add(0x50);                     // push eax - retrieve ret addr
 
             //jump to the original function
-            last.Add(0x68);                     // push ...
+            last.Add(0x68);                     // push Target
 
-            var bytes3 = IntPtr.Size == 4 ? BitConverter.GetBytes(Target.ToInt32()) :
-                BitConverter.GetBytes(Target.ToInt64());
+            var bytes3 = BitConverter.GetBytes(HookPointer.ToInt32());
 
             last.AddRange(bytes3);
             last.Add(0xC3);                     // ret
@@ -132,27 +154,10 @@ namespace Process.NET.Applied.Detours
             //Setup the detour bytes
             New = new List<byte> { 0x68 };
 
-            var bytes = IntPtr.Size == 4 ? BitConverter.GetBytes(HookPointer.ToInt32()) :
-                BitConverter.GetBytes(HookPointer.ToInt64());
+            var bytes = BitConverter.GetBytes(HookPointer.ToInt32());
 
             New.AddRange(bytes);
             New.Add(0xC3);
-
-            //TODO come back and clean this up if desired
-            //if (Environment.Is64BitProcess)
-            //{
-            //    New = new List<byte> { 0x68 };
-            //    var tmp = BitConverter.GetBytes(HookPointer.ToInt64());
-            //    New.AddRange(tmp);
-            //    New.Add(0xC3);
-            //}
-            //else
-            //{
-            //    New = new List<byte> { 0x68 };
-            //    var tmp = BitConverter.GetBytes(HookPointer.ToInt32());
-            //    New.AddRange(tmp);
-            //    New.Add(0xC3);
-            //}
         }
 
         /// <summary>
