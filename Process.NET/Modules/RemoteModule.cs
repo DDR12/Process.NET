@@ -130,6 +130,7 @@ namespace Process.NET.Modules
                              localModule.BaseAddress.ToInt64();
 
                 // Rebase the function with the remote module
+                //TODO: This is not x86 safe, but that probably doesnt matter anymore?
                 var function = new RemoteFunction(Process, new IntPtr(Native.BaseAddress.ToInt64() + offset),
                     functionName);
 

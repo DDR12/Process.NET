@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 using Process.NET.Extensions;
 using Process.NET.Memory;
 using Process.NET.Utilities;
@@ -18,6 +20,89 @@ namespace Process.NET.Applied.Detours
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
         private readonly Delegate _hookDelegate;
+
+
+        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory,
+            bool ignoreRules = false, bool fastCall = true)
+        {
+            ProcessMemory = memory;
+            Identifier = identifier;
+            IgnoreRules = ignoreRules;
+
+            TargetDelegate = target;
+            Target = target.ToFunctionPtr();
+
+            _hookDelegate = hook;
+            HookPointer = hook.ToFunctionPtr(); //target
+
+            //Store the orginal bytes
+            Original = new List<byte>();
+            Original.AddRange(memory.Read(Target, 6));
+
+            //here the mess starts ...
+            //-----------------------
+            paramCount = target.Method.GetParameters().Length;
+
+            //preparing the stack from fastcall to stdcall
+            first = new List<byte>();
+
+            first.Add(0x58);                    // pop eax - store the ret addr
+
+            if (paramCount > 1)
+                first.Add(0x52);                // push edx
+
+            if (paramCount > 0)
+                first.Add(0x51);                // push ecx
+
+            first.Add(0x50);                    // push eax - retrieve ret addr
+
+            //jump to the hook
+            first.Add(0x68);                    // push ...
+
+            var bytes = IntPtr.Size == 4 ? BitConverter.GetBytes(HookPointer.ToInt32()) :
+                BitConverter.GetBytes(HookPointer.ToInt64());
+
+            first.AddRange(bytes);
+            first.Add(0xC3);                    // ret - jump to the detour handler
+
+            firstPtr = Marshal.AllocHGlobal(first.Count);
+            ProcessMemory.Write(firstPtr, first.ToArray());
+
+            //Setup the detour bytes
+            New = new List<byte> { 0x68 };     //push ...
+            var bytes2 = IntPtr.Size == 4 ? BitConverter.GetBytes(firstPtr.ToInt32()) :
+                BitConverter.GetBytes(firstPtr.ToInt64());
+            New.AddRange(bytes2);
+            New.Add(0xC3);                     //ret - jump to the first
+
+            //preparing ecx, edx and the stack from stdcall to fastcall
+            last = new List<byte>();
+            last.Add(0x58);                     // pop eax - store the ret addr
+
+            if (paramCount > 0)
+                last.Add(0x59);                 // pop ecx
+
+            if (paramCount > 1)
+                last.Add(0x5A);                 // pop edx
+
+            last.Add(0x50);                     // push eax - retrieve ret addr
+
+            //jump to the original function
+            last.Add(0x68);                     // push ...
+
+            var bytes3 = IntPtr.Size == 4 ? BitConverter.GetBytes(Target.ToInt32()) :
+                BitConverter.GetBytes(Target.ToInt64());
+
+            last.AddRange(bytes3);
+            last.Add(0xC3);                     // ret
+
+            lastPtr = Marshal.AllocHGlobal(last.Count);
+
+            ProcessMemory.Write(lastPtr, last.ToArray());
+
+            //create the func called after the hook
+            lastDelegate = Marshal.GetDelegateForFunctionPointer(lastPtr, TargetDelegate.GetType());
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Detour" /> class.
@@ -105,6 +190,13 @@ namespace Process.NET.Applied.Detours
         /// <value>The targeted delegate instance.</value>
         public Delegate TargetDelegate { get; }
 
+        public int paramCount { get; }
+        public List<byte> first { get; }
+        public IntPtr firstPtr { get; }
+        public List<byte> last { get; }
+        public IntPtr lastPtr { get; }
+        public Delegate lastDelegate { get; }
+
         /// <summary>
         ///     Get a value indicating if the detour has been disabled due to a running AntiCheat scan
         /// </summary>
@@ -149,6 +241,11 @@ namespace Process.NET.Applied.Detours
             IsDisposed = true;
             if (IsEnabled)
                 Disable();
+            if (firstPtr != IntPtr.Zero || lastPtr != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(firstPtr);
+                Marshal.FreeHGlobal(lastPtr);
+            }
             GC.SuppressFinalize(this);
         }
 
@@ -198,6 +295,11 @@ namespace Process.NET.Applied.Detours
                     return;
 
                 ProcessMemory.Write(Target, New.ToArray());
+                //if (lastPtr != IntPtr.Zero && last != null)
+                //{
+                //    ProcessMemory.Write(firstPtr, first.ToArray());
+                //    ProcessMemory.Write(lastPtr, last.ToArray());
+                //}
                 IsEnabled = true;
             }
         }
@@ -220,6 +322,13 @@ namespace Process.NET.Applied.Detours
         {
             Disable();
             var ret = TargetDelegate.DynamicInvoke(args);
+            Enable();
+            return ret;
+        }
+        public object CallOriginalFC(params object[] args)
+        {
+            Disable();
+            var ret = lastDelegate.DynamicInvoke(args);
             Enable();
             return ret;
         }

@@ -215,6 +215,13 @@ namespace Process.NET.Native
         public static extern IntPtr VirtualAllocEx(SafeMemoryHandle hProcess, IntPtr lpAddress, int dwSize,
             MemoryAllocationFlags flAllocationType, MemoryProtectionFlags flProtect);
 
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern IntPtr VirtualAlloc(IntPtr startAddress, IntPtr size, uint allocationType, uint protectionType);
+
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern IntPtr VirtualFree(IntPtr address, IntPtr size, uint freeType);
+
+
         /// <summary>
         ///     Releases, decommits, or releases and decommits a region of memory within the virtual address space of a specified
         ///     process.

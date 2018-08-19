@@ -27,7 +27,7 @@ namespace Process.NET.Applied
         {
             foreach (var item in InternalItems)
                 if (!item.Value.IsEnabled)
-                    item.Value.Disable();
+                    item.Value.Enable();
         }
 
         public void DisableAll()
