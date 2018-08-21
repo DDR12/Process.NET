@@ -89,7 +89,6 @@
     <Compile Include="Applied\ComplexAppliedManager.cs" />
     <Compile Include="Applied\Detours\Detour.cs" />
     <Compile Include="Applied\Detours\DetourManager.cs" />
-    <Compile Include="Applied\Detours\FCDetour.cs" />
     <Compile Include="Applied\Patches\Patch.cs" />
     <Compile Include="Applied\Patches\PatchManager.cs" />
     <Compile Include="Assembly\AssemblyFactory.cs" />

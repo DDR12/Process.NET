@@ -89,7 +89,7 @@ namespace Process.NET.Applied.Detours
             first.Add(0xC3);                    // ret - jump to the detour handler
 
             firstPtr = Marshal.AllocHGlobal(first.Count);
-            ProcessMemory.Write(firstPtr, first.ToArray());
+            //ProcessMemory.Write(firstPtr, first.ToArray());
 
             //Setup the detour bytes
             New = new List<byte> { 0x68 };     //push firstPtr
@@ -120,7 +120,7 @@ namespace Process.NET.Applied.Detours
 
             lastPtr = Marshal.AllocHGlobal(last.Count);
 
-            ProcessMemory.Write(lastPtr, last.ToArray());
+            //ProcessMemory.Write(lastPtr, last.ToArray());
 
             //create the func called after the hook
             lastDelegate = Marshal.GetDelegateForFunctionPointer(lastPtr, TargetDelegate.GetType());
@@ -300,11 +300,11 @@ namespace Process.NET.Applied.Detours
                     return;
 
                 ProcessMemory.Write(Target, New.ToArray());
-                //if (lastPtr != IntPtr.Zero && last != null)
-                //{
-                //    ProcessMemory.Write(firstPtr, first.ToArray());
-                //    ProcessMemory.Write(lastPtr, last.ToArray());
-                //}
+                if (lastPtr != IntPtr.Zero && lastPtr != IntPtr.Zero)
+                {
+                    ProcessMemory.Write(firstPtr, first.ToArray());
+                    ProcessMemory.Write(lastPtr, last.ToArray());
+                }
                 IsEnabled = true;
             }
         }
@@ -326,14 +326,14 @@ namespace Process.NET.Applied.Detours
         public object CallOriginal(params object[] args)
         {
             Disable();
-            var ret = TargetDelegate.DynamicInvoke(args);
-            Enable();
-            return ret;
-        }
-        public object CallOriginalFC(params object[] args)
-        {
-            Disable();
-            var ret = lastDelegate.DynamicInvoke(args);
+            object ret;
+            if (firstPtr != IntPtr.Zero || lastPtr != IntPtr.Zero)
+            {
+                ret = lastDelegate.DynamicInvoke(args);
+                Enable();
+                return ret;
+            }
+            ret = TargetDelegate.DynamicInvoke(args);
             Enable();
             return ret;
         }
