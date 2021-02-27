@@ -44,7 +44,7 @@ namespace Process.NET.Memory
         ///     char).
         /// </param>
         /// <returns>The string.</returns>
-        public string Read(IntPtr intPtr, Encoding encoding, int maxLength)
+        public string ReadString(IntPtr intPtr, Encoding encoding, int maxLength)
         {
             var buffer = Read(intPtr, maxLength);
             var ret = encoding.GetString(buffer);
@@ -89,7 +89,7 @@ namespace Process.NET.Memory
         /// <param name="intPtr">The address where the string is written.</param>
         /// <param name="stringToWrite">The text to write.</param>
         /// <param name="encoding">The encoding used.</param>
-        public virtual void Write(IntPtr intPtr, string stringToWrite, Encoding encoding)
+        public virtual void WriteString(IntPtr intPtr, string stringToWrite, Encoding encoding)
         {
             if (stringToWrite[stringToWrite.Length - 1] != '\0')
                 stringToWrite += '\0';

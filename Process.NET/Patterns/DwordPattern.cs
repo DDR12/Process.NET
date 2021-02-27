@@ -19,7 +19,15 @@ namespace Process.NET.Patterns
             _bytes = GetBytesFromDwordPattern(dwordPattern);
             _mask = GetMaskFromDwordPattern(dwordPattern);
         }
-
+        public DwordPattern(byte[] pattern)
+        {
+            PatternText = string.Join(" ", pattern.Select(o => o.ToString("X2")));
+            PatternType = MemoryPatternType.Function;
+            _bytes = new byte[pattern.Length];
+            for (int i = 0; i < _bytes.Length; i++)
+                _bytes[i] = pattern[i];
+            _mask = new string(Enumerable.Repeat<char>('x', _bytes.Length).ToArray());
+        }
         public DwordPattern(string pattern, int offset)
         {
             PatternText = pattern;

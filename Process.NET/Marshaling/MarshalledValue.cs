@@ -75,7 +75,7 @@ namespace Process.NET.Marshaling
                 // Allocate memory in the remote process (string + '\0')
                 Allocated = Process.MemoryFactory.Allocate(Randomizer.GenerateString(), text.Length + 1);
                 // Write the value
-                Allocated.Write(0, text, Encoding.UTF8);
+                Allocated.WriteString(0, text, Encoding.UTF8);
                 // Get the pointer
                 Reference = Allocated.BaseAddress;
             }

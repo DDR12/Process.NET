@@ -25,7 +25,7 @@ namespace Process.NET.Memory
         ///     char).
         /// </param>
         /// <returns>The string.</returns>
-        string Read(IntPtr intPtr, Encoding encoding, int maxLength);
+        string ReadString(IntPtr intPtr, Encoding encoding, int maxLength);
 
         /// <summary>
         ///     Reads the value of a specified type from memory.
@@ -57,7 +57,7 @@ namespace Process.NET.Memory
         /// <param name="intPtr">The address where the string is written.</param>
         /// <param name="stringToWrite">The text to write.</param>
         /// <param name="encoding">The encoding used.</param>
-        void Write(IntPtr intPtr, string stringToWrite, Encoding encoding);
+        void WriteString(IntPtr intPtr, string stringToWrite, Encoding encoding);
 
         /// <summary>
         ///     Writes an array of a specified type to memory,

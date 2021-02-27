@@ -89,9 +89,9 @@ namespace Process.NET.Memory
         ///     ('\0' char).
         /// </param>
         /// <returns>The string.</returns>
-        public string Read(int offset, Encoding encoding, int maxLength = 512)
+        public string ReadString(int offset, Encoding encoding, int maxLength = 512)
         {
-            return Process.Memory.Read(BaseAddress + offset, encoding, maxLength);
+            return Process.Memory.ReadString(BaseAddress + offset, encoding, maxLength);
         }
 
         /// <summary>
@@ -122,9 +122,9 @@ namespace Process.NET.Memory
         /// <param name="offset">The offset where the string is written from the pointer.</param>
         /// <param name="text">The text to write.</param>
         /// <param name="encoding">The encoding used.</param>
-        public void Write(int offset, string text, Encoding encoding)
+        public void WriteString(int offset, string text, Encoding encoding)
         {
-            Process.Memory.Write(BaseAddress + offset, text, encoding);
+            Process.Memory.WriteString(BaseAddress + offset, text, encoding);
         }
 
         /// <summary>
@@ -183,9 +183,9 @@ namespace Process.NET.Memory
         ///     ('\0' char).
         /// </param>
         /// <returns>The string.</returns>
-        public string Read(Enum offset, Encoding encoding, int maxLength = 512)
+        public string ReadString(Enum offset, Encoding encoding, int maxLength = 512)
         {
-            return Read(Convert.ToInt32(offset), encoding, maxLength);
+            return ReadString(Convert.ToInt32(offset), encoding, maxLength);
         }
 
         /// <summary>
@@ -197,9 +197,9 @@ namespace Process.NET.Memory
         ///     ('\0' char).
         /// </param>
         /// <returns>The string.</returns>
-        public string Read(Encoding encoding, int maxLength = 512)
+        public string ReadString(Encoding encoding, int maxLength = 512)
         {
-            return Read(0, encoding, maxLength);
+            return ReadString(0, encoding, maxLength);
         }
 
         /// <summary>
@@ -212,9 +212,9 @@ namespace Process.NET.Memory
         /// </param>
         /// <param name="encoding"></param>
         /// <returns>The string.</returns>
-        public string Read(int offset, int maxLength, Encoding encoding)
+        public string ReadString(int offset, int maxLength, Encoding encoding)
         {
-            return Process.Memory.Read(BaseAddress + offset, encoding, maxLength);
+            return Process.Memory.ReadString(BaseAddress + offset, encoding, maxLength);
         }
 
         /// <summary>
@@ -226,9 +226,9 @@ namespace Process.NET.Memory
         ///     ('\0' char).
         /// </param>
         /// <returns>The string.</returns>
-        public string Read(Enum offset, int maxLength = 512)
+        public string ReadStringUTF8(Enum offset, int maxLength = 512)
         {
-            return Read(Convert.ToInt32(offset), maxLength, Encoding.UTF8);
+            return ReadString(Convert.ToInt32(offset), maxLength, Encoding.UTF8);
         }
 
         /// <summary>
@@ -287,9 +287,9 @@ namespace Process.NET.Memory
         /// <param name="offset">The offset where the string is written from the pointer.</param>
         /// <param name="text">The text to write.</param>
         /// <param name="encoding">The encoding used.</param>
-        public void Write(Enum offset, string text, Encoding encoding)
+        public void WriteString(Enum offset, string text, Encoding encoding)
         {
-            Write(Convert.ToInt32(offset), text, encoding);
+            WriteString(Convert.ToInt32(offset), text, encoding);
         }
 
         /// <summary>
@@ -297,9 +297,9 @@ namespace Process.NET.Memory
         /// </summary>
         /// <param name="text">The text to write.</param>
         /// <param name="encoding">The encoding used.</param>
-        public void Write(string text, Encoding encoding)
+        public void WriteString(string text, Encoding encoding)
         {
-            Write(0, text, encoding);
+            WriteString(0, text, encoding);
         }
 
         /// <summary>
@@ -307,7 +307,7 @@ namespace Process.NET.Memory
         /// </summary>
         /// <param name="offset">The offset where the string is written from the pointer.</param>
         /// <param name="text">The text to write.</param>
-        public void Write(int offset, string text)
+        public void WriteString(int offset, string text)
         {
             Process.Memory.Write(BaseAddress + offset, text);
         }
@@ -317,18 +317,18 @@ namespace Process.NET.Memory
         /// </summary>
         /// <param name="offset">The offset where the string is written from the pointer.</param>
         /// <param name="text">The text to write.</param>
-        public void Write(Enum offset, string text)
+        public void WriteString(Enum offset, string text)
         {
-            Write(Convert.ToInt32(offset), text);
+            WriteString(Convert.ToInt32(offset), text);
         }
 
         /// <summary>
         ///     Writes a string using the encoding UTF8 in the remote process.
         /// </summary>
         /// <param name="text">The text to write.</param>
-        public void Write(string text)
+        public void WriteString(string text)
         {
-            Write(0, text);
+            WriteString(0, text);
         }
 
         /// <summary>
