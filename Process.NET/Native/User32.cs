@@ -406,5 +406,10 @@ namespace Process.NET.Native
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+
+        [DllImport("user32.dll")]
+        public static extern bool EnumThreadWindows(int dwThreadId, EnumWindowsProc lpfn, IntPtr lParam);
+
     }
 }

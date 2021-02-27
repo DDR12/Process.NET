@@ -544,5 +544,25 @@ namespace Process.NET.Utilities
             }
             return process.MainWindowHandle;
         }
+
+        /// <summary>
+        /// Truely gets all windows that belong to an application,
+        /// Better performance to query threads then query windows that belong to the thread.
+        /// Unlike GetChildWindows, this gets ALL windows that belong to an application even windows that are not children of that application.
+        /// </summary>
+        /// <param name="processId">The process id of the application.</param>
+        /// <returns>An enumeration of the handles of the windows that belong to the application.</returns>
+        public static IEnumerable<IntPtr> EnumerateProcessWindowHandles(int processId)
+        {
+            var handles = new List<IntPtr>();
+
+            foreach (ProcessThread thread in System.Diagnostics.Process.GetProcessById(processId).Threads)
+                User32.EnumThreadWindows(thread.Id,
+                   (hWnd, lParam) => { handles.Add(hWnd); return true; }, IntPtr.Zero);
+
+            return handles;
+        }
+
+
     }
 }

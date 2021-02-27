@@ -24,28 +24,15 @@ namespace Process.NET.Windows
         }
 
         /// <summary>
-        ///     Gets all the child window handles that belong to the application.
-        /// </summary>
-        internal IEnumerable<IntPtr> ChildWindowHandles
-            => WindowHelper.EnumChildWindows(_process.Native.MainWindowHandle);
-
-        /// <summary>
         ///     Gets all the window handles that belong to the application.
         /// </summary>
-        internal IEnumerable<IntPtr> WindowHandles => new List<IntPtr>(ChildWindowHandles) {MainWindowHandle};
+        internal IEnumerable<IntPtr> WindowHandles => new List<IntPtr>(WindowHelper.EnumerateProcessWindowHandles(_process.Native.Id));
 
         /// <summary>
         ///     Gets the main window handle of the application.
         /// </summary>
         public IntPtr MainWindowHandle => _process.Native.MainWindowHandle;
 
-        /// <summary>
-        ///     Gets all the child windows that belong to the application.
-        /// </summary>
-        public IEnumerable<IWindow> ChildWindows
-        {
-            get { return ChildWindowHandles.Select(handle => new RemoteWindow(_process, handle)); }
-        }
 
         /// <summary>
         ///     Gets the main window of the application.

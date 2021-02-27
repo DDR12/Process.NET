@@ -72,6 +72,7 @@ namespace Process.NET
         {
         }
 
+
         /// <summary>
         /// Raises when the <see cref="ProcessSharp"/> object is disposed.
         /// </summary>
@@ -112,6 +113,23 @@ namespace Process.NET
         /// </summary>
         public IWindowFactory WindowFactory { get; set; }
 
+        protected string ownerUser = null;
+        /// <summary>
+        /// Gets the name of the user this process belongs to.
+        /// </summary>
+        public string OwnerUser
+        {
+            get
+            {
+                if(string.IsNullOrWhiteSpace(ownerUser))
+                {
+                    ownerUser = ProcessHelper.GetProcessUser(Native.Id);
+                }
+                return ownerUser;
+            }
+        }
+
+
         /// <summary>
         /// Gets the <see cref="IProcessModule"/> with the specified module name.
         /// </summary>
@@ -128,6 +146,7 @@ namespace Process.NET
 
         protected bool IsDisposed { get; set; }
         protected bool MustBeDisposed { get; set; } = true;
+
 
 
         /// <summary>

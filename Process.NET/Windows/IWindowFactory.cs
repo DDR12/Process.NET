@@ -7,7 +7,6 @@ namespace Process.NET.Windows
     {
         IEnumerable<IWindow> this[string windowTitle] { get; }
 
-        IEnumerable<IWindow> ChildWindows { get; }
         IWindow MainWindow { get; set; }
         IEnumerable<IWindow> Windows { get; }
 

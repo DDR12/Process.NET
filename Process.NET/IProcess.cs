@@ -27,6 +27,10 @@ namespace Process.NET
         ///     Class for reading and writing memory.
         /// </summary>
         IMemory Memory { get; set; }
+        /// <summary>
+        /// Gets the name of the user this process belongs to.
+        /// </summary>
+        string OwnerUser { get; }
 
         /// <summary>
         ///     Factory for manipulating threads.

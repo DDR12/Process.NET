@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Principal;
 using Process.NET.Extensions;
 using Process.NET.Native;
 using Process.NET.Native.Types;
@@ -198,7 +199,30 @@ namespace Process.NET.Utilities
                 }
             }
         }
+        public static string GetProcessUser(System.Diagnostics.Process process)
+        {
+            IntPtr processHandle = IntPtr.Zero;
+            try
+            {
+                Advapi32.OpenProcessToken(process.Handle, 8, out processHandle);
+                WindowsIdentity wi = new WindowsIdentity(processHandle);
+                string user = wi.Name;
+                return user.Contains(@"\") ? user.Substring(user.IndexOf(@"\") + 1) : user;
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                if (processHandle != IntPtr.Zero)
+                {
+                    Kernel32.CloseHandle(processHandle);
+                }
+            }
 
+        }
+        public static string GetProcessUser(int processID) => GetProcessUser(SystemProcess.GetProcessById(processID));
         public static bool SetDebugPrivileges()
         {
             IntPtr hToken;
