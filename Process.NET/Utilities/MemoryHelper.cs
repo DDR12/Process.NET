@@ -68,7 +68,7 @@ namespace Process.NET.Utilities
             // Free the memory
             if (!Kernel32.VirtualFreeEx(processHandle, address, 0, MemoryReleaseFlags.Release))
                 // If the memory wasn't correctly freed, throws an exception
-                throw new Win32Exception($"The memory page 0x{address.ToString("X")} cannot be freed.");
+                throw new Win32Exception($"The memory page for process {processHandle} at 0x{address.ToString("X")} cannot be freed.");
         }
 
         /// <summary>

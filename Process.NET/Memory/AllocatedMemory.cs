@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Process.NET.Native.Types;
 using Process.NET.Utilities;
 
@@ -9,6 +10,7 @@ namespace Process.NET.Memory
     /// </summary>
     public class AllocatedMemory : MemoryRegion, IAllocatedMemory
     {
+        private readonly System.Diagnostics.Process process = null;
         /// <summary>
         ///     Initializes a new instance of the <see cref="AllocatedMemory" /> class.
         /// </summary>
@@ -22,6 +24,7 @@ namespace Process.NET.Memory
             bool mustBeDisposed = true)
             : base(processPlus, MemoryHelper.Allocate(processPlus.Handle, size, protection))
         {
+            process = processPlus.Native;
             // Set local vars
             Identifier = name;
             MustBeDisposed = mustBeDisposed;
@@ -39,6 +42,10 @@ namespace Process.NET.Memory
         /// </summary>
         public bool MustBeDisposed { get; set; }
 
+        public bool IsAllocated => !IsDisposed;
+        public int Size { get; }
+        public string Identifier { get; }
+
         /// <summary>
         ///     Releases all resources used by the <see cref="AllocatedMemory" /> object.
         /// </summary>
@@ -49,8 +56,19 @@ namespace Process.NET.Memory
             {
                 // Set the flag to true
                 IsDisposed = true;
-                // Release the allocated memory
-                Release();
+                if (!process.HasExited)
+                {
+                    try
+                    {
+                        // Release the allocated memory
+                        Release();
+                    }
+                    catch (Win32Exception ex)
+                    {
+                        // Rethrow the exception but with the region's name.
+                        throw new Win32Exception($"Allocated memory: {Identifier} in process id {process.Id}, {ex.Message}");
+                    }
+                }
                 // Remove this object from the collection of allocated memory
                 Process.MemoryFactory.Deallocate(this);
                 // Remove the pointer
@@ -60,9 +78,6 @@ namespace Process.NET.Memory
             }
         }
 
-        public bool IsAllocated => !IsDisposed;
-        public int Size { get; }
-        public string Identifier { get; }
 
         /// <summary>
         ///     Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.

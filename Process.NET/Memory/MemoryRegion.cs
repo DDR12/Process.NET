@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.Security.Cryptography;
 using Process.NET.Native.Types;
 using Process.NET.Utilities;
 
