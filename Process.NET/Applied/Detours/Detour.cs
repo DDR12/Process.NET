@@ -4,10 +4,16 @@ using System.Runtime.InteropServices;
 
 using Process.NET.Extensions;
 using Process.NET.Memory;
-using Process.NET.Utilities;
 
 namespace Process.NET.Applied.Detours
 {
+    public enum DetourCreateFlags
+    {
+        None,
+        IgnoreRules,
+        FastCall,
+        _x64,
+    }
     /// <summary>
     ///     A manager class to handle function detours, and hooks.
     ///     <remarks>All credits to the GreyMagic library written by Apoc @ www.ownedcore.com</remarks>
@@ -19,111 +25,118 @@ namespace Process.NET.Applied.Detours
         ///     to keep a reference, to avoid the GC from collecting the delegate instance!
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
-        private readonly Delegate _hookDelegate;
+        private Delegate _hookDelegate;
 
-        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory,
-            bool ignoreRules = false, bool fastCall = true, bool x64 = true)
+        protected void Construct(Delegate target, Delegate hook, string identifier, IMemory memory, DetourCreateFlags flags)
         {
             ProcessMemory = memory;
             Identifier = identifier;
-            IgnoreRules = ignoreRules;
-
+            IgnoreRules = flags.HasFlag(DetourCreateFlags.IgnoreRules);
+            
             TargetDelegate = target;
             Target = target.ToFunctionPtr();
-
+            
             _hookDelegate = hook;
             HookPointer = hook.ToFunctionPtr(); //target
 
-            //Store the original bytes
-            Original = new List<byte>();
+            if(flags.HasFlag(DetourCreateFlags.FastCall))
+            {
+                if (flags.HasFlag(DetourCreateFlags._x64))
+                {
+                    //Store the original bytes
+                    Original = new List<byte>();
 
-            //Setup the detour bytes
-            New = new List<byte> { 0x48, 0xb8 }; // movabs rax
-            var bytes = BitConverter.GetBytes(HookPointer.ToInt64()); // hookptr
-            New.AddRange(bytes);
-            New.AddRange(new byte[] { 0xff, 0xe0 }); // jmp rax
+                    //Setup the detour bytes
+                    New = new List<byte> { 0x48, 0xb8 }; // movabs rax
+                    var bytes = BitConverter.GetBytes(HookPointer.ToInt64()); // hookptr
+                    New.AddRange(bytes);
+                    New.AddRange(new byte[] { 0xff, 0xe0 }); // jmp rax
 
-            Original.AddRange(memory.Read(Target, New.Count));
-        }
+                    Original.AddRange(memory.Read(Target, New.Count));
+                }
+                else
+                {
+                    //Store the orginal bytes
+                    Original = new List<byte>();
+                    Original.AddRange(memory.Read(Target, 6));
 
-        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory,
-            bool ignoreRules = false, bool fastCall = true)
-        {
-            ProcessMemory = memory;
-            Identifier = identifier;
-            IgnoreRules = ignoreRules;
+                    //here the mess starts ...
+                    //-----------------------
+                    paramCount = target.Method.GetParameters().Length;
 
-            TargetDelegate = target;
-            Target = target.ToFunctionPtr();
+                    //preparing the stack from fastcall to stdcall
+                    first = new List<byte>();
 
-            _hookDelegate = hook;
-            HookPointer = hook.ToFunctionPtr(); //target
+                    first.Add(0x58);                    // pop eax - store the ret addr
 
-            //Store the orginal bytes
-            Original = new List<byte>();
-            Original.AddRange(memory.Read(Target, 6));
+                    if (paramCount > 1)
+                        first.Add(0x52);                // push edx
 
-            //here the mess starts ...
-            //-----------------------
-            paramCount = target.Method.GetParameters().Length;
+                    if (paramCount > 0)
+                        first.Add(0x51);                // push ecx
 
-            //preparing the stack from fastcall to stdcall
-            first = new List<byte>();
+                    first.Add(0x50);                    // push eax - retrieve ret addr
 
-            first.Add(0x58);                    // pop eax - store the ret addr
+                    //jump to the hook
+                    first.Add(0x68);                    // push HookPointer
 
-            if (paramCount > 1)
-                first.Add(0x52);                // push edx
+                    var bytes = BitConverter.GetBytes(HookPointer.ToInt32());
 
-            if (paramCount > 0)
-                first.Add(0x51);                // push ecx
+                    first.AddRange(bytes);
+                    first.Add(0xC3);                    // ret - jump to the detour handler
 
-            first.Add(0x50);                    // push eax - retrieve ret addr
+                    firstPtr = Marshal.AllocHGlobal(first.Count);
+                    //ProcessMemory.Write(firstPtr, first.ToArray());
 
-            //jump to the hook
-            first.Add(0x68);                    // push HookPointer
+                    //Setup the detour bytes
+                    New = new List<byte> { 0x68 };     //push firstPtr
+                    var bytes2 = IntPtr.Size == 4 ? BitConverter.GetBytes(firstPtr.ToInt32()) :
+                        BitConverter.GetBytes(firstPtr.ToInt64());
+                    New.AddRange(bytes2);
+                    New.Add(0xC3);                     //ret - jump to the first
 
-            var bytes = BitConverter.GetBytes(HookPointer.ToInt32());
+                    //preparing ecx, edx and the stack from stdcall to fastcall
+                    last = new List<byte>();
+                    last.Add(0x58);                     // pop eax - store the ret addr
 
-            first.AddRange(bytes);
-            first.Add(0xC3);                    // ret - jump to the detour handler
+                    if (paramCount > 0)
+                        last.Add(0x59);                 // pop ecx
 
-            firstPtr = Marshal.AllocHGlobal(first.Count);
-            //ProcessMemory.Write(firstPtr, first.ToArray());
+                    if (paramCount > 1)
+                        last.Add(0x5A);                 // pop edx
 
-            //Setup the detour bytes
-            New = new List<byte> { 0x68 };     //push firstPtr
-            var bytes2 = IntPtr.Size == 4 ? BitConverter.GetBytes(firstPtr.ToInt32()) :
-                BitConverter.GetBytes(firstPtr.ToInt64());
-            New.AddRange(bytes2);
-            New.Add(0xC3);                     //ret - jump to the first
+                    last.Add(0x50);                     // push eax - retrieve ret addr
 
-            //preparing ecx, edx and the stack from stdcall to fastcall
-            last = new List<byte>();
-            last.Add(0x58);                     // pop eax - store the ret addr
+                    //jump to the original function
+                    last.Add(0x68);                     // push Target
 
-            if (paramCount > 0)
-                last.Add(0x59);                 // pop ecx
+                    var bytes3 = BitConverter.GetBytes(HookPointer.ToInt32());
 
-            if (paramCount > 1)
-                last.Add(0x5A);                 // pop edx
+                    last.AddRange(bytes3);
+                    last.Add(0xC3);                     // ret
 
-            last.Add(0x50);                     // push eax - retrieve ret addr
+                    lastPtr = Marshal.AllocHGlobal(last.Count);
 
-            //jump to the original function
-            last.Add(0x68);                     // push Target
+                    //ProcessMemory.Write(lastPtr, last.ToArray());
 
-            var bytes3 = BitConverter.GetBytes(HookPointer.ToInt32());
+                    //create the func called after the hook
+                    lastDelegate = Marshal.GetDelegateForFunctionPointer(lastPtr, TargetDelegate.GetType());
+                }
+            }
+            else
+            {
+                //Store the original bytes
+                Original = new List<byte>();
+                Original.AddRange(memory.Read(Target, 6));
 
-            last.AddRange(bytes3);
-            last.Add(0xC3);                     // ret
+                //Setup the detour bytes
+                New = new List<byte> { 0x68 };
 
-            lastPtr = Marshal.AllocHGlobal(last.Count);
+                var bytes = BitConverter.GetBytes(HookPointer.ToInt32());
 
-            //ProcessMemory.Write(lastPtr, last.ToArray());
-
-            //create the func called after the hook
-            lastDelegate = Marshal.GetDelegateForFunctionPointer(lastPtr, TargetDelegate.GetType());
+                New.AddRange(bytes);
+                New.Add(0xC3);
+            }
         }
 
         /// <summary>
@@ -134,73 +147,52 @@ namespace Process.NET.Applied.Detours
         /// <param name="identifier"></param>
         /// <param name="memory">The <see cref="MemoryPlus" /> instance.</param>
         /// <param name="ignoreRules"></param>
-        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory,
-            bool ignoreRules = false)
+        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory, DetourCreateFlags flags)
         {
-            ProcessMemory = memory;
-            Identifier = identifier;
-            IgnoreRules = ignoreRules;
-
-            TargetDelegate = target;
-            Target = target.ToFunctionPtr();
-
-            _hookDelegate = hook;
-            HookPointer = hook.ToFunctionPtr(); //target
-
-            //Store the original bytes
-            Original = new List<byte>();
-            Original.AddRange(memory.Read(Target, 6));
-
-            //Setup the detour bytes
-            New = new List<byte> { 0x68 };
-
-            var bytes = BitConverter.GetBytes(HookPointer.ToInt32());
-
-            New.AddRange(bytes);
-            New.Add(0xC3);
+            Construct(target, hook, identifier, memory, flags);
         }
 
         /// <summary>
         ///     The reference of the <see cref="ProcessMemory" /> object.
         /// </summary>
-        private IMemory ProcessMemory { get; }
+        private IMemory ProcessMemory { get; set; }
 
         /// <summary>
         ///     Gets the pointer to be hooked/being hooked.
         /// </summary>
         /// <value>The pointer to be hooked/being hooked.</value>
-        public IntPtr HookPointer { get; }
+        public IntPtr HookPointer { get; protected set; }
 
         /// <summary>
         ///     Gets the new bytes.
         /// </summary>
         /// <value>The new bytes.</value>
-        public List<byte> New { get; }
+        public List<byte> New { get; protected set; }
 
         /// <summary>
         ///     Gets the original bytes.
         /// </summary>
         /// <value>The original bytes.</value>
-        public List<byte> Original { get; }
+        public List<byte> Original { get; protected set; }
 
         /// <summary>
         ///     Gets the pointer of the target function.
         /// </summary>
         /// <value>The pointer of the target function.</value>
-        public IntPtr Target { get; }
+        public IntPtr Target { get; protected set; }
 
         /// <summary>
         ///     Gets the targeted delegate instance.
         /// </summary>
         /// <value>The targeted delegate instance.</value>
-        public Delegate TargetDelegate { get; }
+        public Delegate TargetDelegate { get; protected set; }
 
-        public int paramCount { get; }
-        public List<byte> first { get; }
-        public IntPtr firstPtr { get; }
-        public List<byte> last { get; }
-        public IntPtr lastPtr { get; }
-        public Delegate lastDelegate { get; }
+        public int paramCount { get; protected set; }
+        public List<byte> first { get; protected set; }
+        public IntPtr firstPtr { get; protected set; }
+        public List<byte> last { get; protected set; }
+        public IntPtr lastPtr { get; protected set; }
+        public Delegate lastDelegate { get; protected set; }
 
         /// <summary>
         ///     Get a value indicating if the detour has been disabled due to a running AntiCheat scan
@@ -210,7 +202,7 @@ namespace Process.NET.Applied.Detours
         /// <summary>
         ///     Geta s value indicating if the detour should never be disabled by the AntiCheat scan logic
         /// </summary>
-        public bool IgnoreRules { get; }
+        public bool IgnoreRules { get; protected set; }
 
         /// <summary>
         ///     States if the detour is currently enabled.
@@ -221,7 +213,7 @@ namespace Process.NET.Applied.Detours
         ///     The name of the detour.
         /// </summary>
         /// <value>The name of the detour.</value>
-        public string Identifier { get; }
+        public string Identifier { get; protected set; }
 
         /// <summary>
         ///     Gets a value indicating whether the <see cref="Detour" /> is disposed.

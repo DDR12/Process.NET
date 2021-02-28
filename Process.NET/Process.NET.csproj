@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Applied\AppliedManager.cs" />
+    <Compile Include="Applied\AppliedUtilities.cs" />
     <Compile Include="Applied\ComplexAppliedManager.cs" />
     <Compile Include="Applied\Detours\Detour.cs" />
     <Compile Include="Applied\Detours\DetourManager.cs" />

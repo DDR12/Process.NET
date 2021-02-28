@@ -62,12 +62,16 @@ namespace Process.NET.Applied.Detours
             if (InternalItems.ContainsKey(name))
                 throw new ArgumentException($"The {name} detour already exists!", nameof(name));
 
-            if (!fastCall)
-                InternalItems[name] = new Detour(target, newTarget, name, ProcessPlus, ignoreAntiCheatRules);
-            if (fastCall && !x64)
-                InternalItems[name] = new Detour(target, newTarget, name, ProcessPlus, ignoreAntiCheatRules, fastCall);
-            if (fastCall && x64)
-                InternalItems[name] = new Detour(target, newTarget, name, ProcessPlus, ignoreAntiCheatRules, fastCall, x64);
+            DetourCreateFlags flags = DetourCreateFlags.None;
+            if (ignoreAntiCheatRules)
+                flags |= DetourCreateFlags.IgnoreRules;
+            if (fastCall)
+                flags |= DetourCreateFlags.FastCall;
+            if (x64)
+                flags |= DetourCreateFlags._x64;
+
+            InternalItems[name] = new Detour(target, newTarget, name, ProcessPlus, flags);
+
             return InternalItems[name];
         }
 
