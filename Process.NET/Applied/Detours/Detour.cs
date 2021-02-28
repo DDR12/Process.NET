@@ -27,19 +27,108 @@ namespace Process.NET.Applied.Detours
         // ReSharper disable once NotAccessedField.Local
         private Delegate _hookDelegate;
 
+      
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Detour" /> class.
+        /// </summary>
+        /// <param name="target">The target delegate.</param>
+        /// <param name="hook">The hook delegate.</param>
+        /// <param name="identifier"></param>
+        /// <param name="memory">The <see cref="MemoryPlus" /> instance.</param>
+        /// <param name="ignoreRules"></param>
+        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory, DetourCreateFlags flags)
+        {
+            Construct(target, hook, identifier, memory, flags);
+        }
+
+        /// <summary>
+        ///     The reference of the <see cref="ProcessMemory" /> object.
+        /// </summary>
+        private IMemory ProcessMemory { get; set; }
+
+        /// <summary>
+        ///     Gets the pointer to be hooked/being hooked.
+        /// </summary>
+        /// <value>The pointer to be hooked/being hooked.</value>
+        public IntPtr HookPointer { get; protected set; }
+
+        /// <summary>
+        ///     Gets the new bytes.
+        /// </summary>
+        /// <value>The new bytes.</value>
+        public List<byte> New { get; protected set; }
+
+        /// <summary>
+        ///     Gets the original bytes.
+        /// </summary>
+        /// <value>The original bytes.</value>
+        public List<byte> Original { get; protected set; }
+
+        /// <summary>
+        ///     Gets the pointer of the target function.
+        /// </summary>
+        /// <value>The pointer of the target function.</value>
+        public IntPtr Target { get; protected set; }
+
+        /// <summary>
+        ///     Gets the targeted delegate instance.
+        /// </summary>
+        /// <value>The targeted delegate instance.</value>
+        public Delegate TargetDelegate { get; protected set; }
+
+        public int paramCount { get; protected set; }
+        public List<byte> first { get; protected set; }
+        public IntPtr firstPtr { get; protected set; }
+        public List<byte> last { get; protected set; }
+        public IntPtr lastPtr { get; protected set; }
+        public Delegate lastDelegate { get; protected set; }
+
+        /// <summary>
+        ///     Get a value indicating if the detour has been disabled due to a running AntiCheat scan
+        /// </summary>
+        public bool DisabledDueToRules { get; set; }
+
+        /// <summary>
+        ///     Geta s value indicating if the detour should never be disabled by the AntiCheat scan logic
+        /// </summary>
+        public bool IgnoreRules { get; protected set; }
+
+        /// <summary>
+        ///     States if the detour is currently enabled.
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        ///     The name of the detour.
+        /// </summary>
+        /// <value>The name of the detour.</value>
+        public string Identifier { get; protected set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether the <see cref="Detour" /> is disposed.
+        /// </summary>
+        public bool IsDisposed { get; internal set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether the <see cref="Detour" /> must be disposed when the Garbage Collector collects the
+        ///     object.
+        /// </summary>
+        public bool MustBeDisposed { get; set; } = true;
+
         protected void Construct(Delegate target, Delegate hook, string identifier, IMemory memory, DetourCreateFlags flags)
         {
             ProcessMemory = memory;
             Identifier = identifier;
             IgnoreRules = flags.HasFlag(DetourCreateFlags.IgnoreRules);
-            
+
             TargetDelegate = target;
             Target = target.ToFunctionPtr();
-            
+
             _hookDelegate = hook;
             HookPointer = hook.ToFunctionPtr(); //target
 
-            if(flags.HasFlag(DetourCreateFlags.FastCall))
+            if (flags.HasFlag(DetourCreateFlags.FastCall))
             {
                 if (flags.HasFlag(DetourCreateFlags._x64))
                 {
@@ -138,94 +227,6 @@ namespace Process.NET.Applied.Detours
                 New.Add(0xC3);
             }
         }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Detour" /> class.
-        /// </summary>
-        /// <param name="target">The target delegate.</param>
-        /// <param name="hook">The hook delegate.</param>
-        /// <param name="identifier"></param>
-        /// <param name="memory">The <see cref="MemoryPlus" /> instance.</param>
-        /// <param name="ignoreRules"></param>
-        public Detour(Delegate target, Delegate hook, string identifier, IMemory memory, DetourCreateFlags flags)
-        {
-            Construct(target, hook, identifier, memory, flags);
-        }
-
-        /// <summary>
-        ///     The reference of the <see cref="ProcessMemory" /> object.
-        /// </summary>
-        private IMemory ProcessMemory { get; set; }
-
-        /// <summary>
-        ///     Gets the pointer to be hooked/being hooked.
-        /// </summary>
-        /// <value>The pointer to be hooked/being hooked.</value>
-        public IntPtr HookPointer { get; protected set; }
-
-        /// <summary>
-        ///     Gets the new bytes.
-        /// </summary>
-        /// <value>The new bytes.</value>
-        public List<byte> New { get; protected set; }
-
-        /// <summary>
-        ///     Gets the original bytes.
-        /// </summary>
-        /// <value>The original bytes.</value>
-        public List<byte> Original { get; protected set; }
-
-        /// <summary>
-        ///     Gets the pointer of the target function.
-        /// </summary>
-        /// <value>The pointer of the target function.</value>
-        public IntPtr Target { get; protected set; }
-
-        /// <summary>
-        ///     Gets the targeted delegate instance.
-        /// </summary>
-        /// <value>The targeted delegate instance.</value>
-        public Delegate TargetDelegate { get; protected set; }
-
-        public int paramCount { get; protected set; }
-        public List<byte> first { get; protected set; }
-        public IntPtr firstPtr { get; protected set; }
-        public List<byte> last { get; protected set; }
-        public IntPtr lastPtr { get; protected set; }
-        public Delegate lastDelegate { get; protected set; }
-
-        /// <summary>
-        ///     Get a value indicating if the detour has been disabled due to a running AntiCheat scan
-        /// </summary>
-        public bool DisabledDueToRules { get; set; }
-
-        /// <summary>
-        ///     Geta s value indicating if the detour should never be disabled by the AntiCheat scan logic
-        /// </summary>
-        public bool IgnoreRules { get; protected set; }
-
-        /// <summary>
-        ///     States if the detour is currently enabled.
-        /// </summary>
-        public bool IsEnabled { get; set; }
-
-        /// <summary>
-        ///     The name of the detour.
-        /// </summary>
-        /// <value>The name of the detour.</value>
-        public string Identifier { get; protected set; }
-
-        /// <summary>
-        ///     Gets a value indicating whether the <see cref="Detour" /> is disposed.
-        /// </summary>
-        public bool IsDisposed { get; internal set; }
-
-        /// <summary>
-        ///     Gets a value indicating whether the <see cref="Detour" /> must be disposed when the Garbage Collector collects the
-        ///     object.
-        /// </summary>
-        public bool MustBeDisposed { get; set; } = true;
-
         /// <summary>
         ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. In this
         ///     case, it will disable the <see cref="Detour" /> instance and suppress the finalizer.

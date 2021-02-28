@@ -60,7 +60,7 @@ namespace Process.NET.Memory
             }
         }
 
-        public bool IsAllocated => IsDisposed;
+        public bool IsAllocated => !IsDisposed;
         public int Size { get; }
         public string Identifier { get; }
 
