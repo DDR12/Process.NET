@@ -26,7 +26,7 @@ namespace Process.NET.Windows
         /// <summary>
         ///     Gets all the window handles that belong to the application.
         /// </summary>
-        internal IEnumerable<IntPtr> WindowHandles => new List<IntPtr>(WindowHelper.EnumerateProcessWindowHandles(_process.Native.Id));
+        internal IEnumerable<IntPtr> WindowHandles => new List<IntPtr>(WindowHelper.GetProcessWindowsHandles(_process.Native.Id));
 
         /// <summary>
         ///     Gets the main window handle of the application.

@@ -122,10 +122,9 @@ namespace Process.NET.Utilities
             HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
 
             // Get the process id
-            int processId;
-            User32.GetWindowThreadProcessId(windowHandle, out processId);
+            User32.GetWindowThreadProcessId(windowHandle, out uint processId);
 
-            return processId;
+            return (int)processId;
         }
 
         /// <summary>
@@ -139,8 +138,7 @@ namespace Process.NET.Utilities
             HandleManipulator.ValidateAsArgument(windowHandle, "windowHandle");
 
             // Get the thread id
-            int trash;
-            return User32.GetWindowThreadProcessId(windowHandle, out trash);
+            return User32.GetWindowThreadProcessId(windowHandle, out uint trash);
         }
 
         /// <summary>
@@ -170,21 +168,14 @@ namespace Process.NET.Utilities
         /// </summary>
         /// <param name="parentHandle">The parent window handle.</param>
         /// <returns>A collection of handles of the child windows.</returns>
-        public static IEnumerable<IntPtr> EnumChildWindows(IntPtr parentHandle)
+        public static List<IntPtr> EnumChildWindows(IntPtr parentHandle)
         {
             // Create the list of windows
-            var list = new List<IntPtr>();
-            // Create the callback
-            EnumWindowsProc callback = delegate(IntPtr windowHandle, IntPtr lParam)
-            {
-                list.Add(windowHandle);
-                return true;
-            };
-            // Enumerate all windows
-            User32.EnumChildWindows(parentHandle, callback, IntPtr.Zero);
-
+            List<IntPtr> result = new List<IntPtr>();
+            User32.GetWindowThreadProcessId(parentHandle, out uint processID);
+            GetAllWindowsFromProcessID((int)processID, true, parentHandle, result);
             // Returns the list of the windows
-            return list.ToArray();
+            return result.ToList();
         }
 
         /// <summary>
@@ -546,23 +537,30 @@ namespace Process.NET.Utilities
         }
 
         /// <summary>
-        /// Truely gets all windows that belong to an application,
-        /// Better performance to query threads then query windows that belong to the thread.
-        /// Unlike GetChildWindows, this gets ALL windows that belong to an application even windows that are not children of that application.
+        /// Gets all windows that belong to a process regardless of the owning thread.
         /// </summary>
-        /// <param name="processId">The process id of the application.</param>
-        /// <returns>An enumeration of the handles of the windows that belong to the application.</returns>
-        public static IEnumerable<IntPtr> EnumerateProcessWindowHandles(int processId)
+        /// <param name="targetProccessID">ID of the process whose windows to get.</param>
+        /// <returns>A list of all windows handles owned by the process.</returns>
+        public static List<IntPtr> GetProcessWindowsHandles(int targetProccessID)
         {
-            var handles = new List<IntPtr>();
-
-            foreach (ProcessThread thread in System.Diagnostics.Process.GetProcessById(processId).Threads)
-                User32.EnumThreadWindows(thread.Id,
-                   (hWnd, lParam) => { handles.Add(hWnd); return true; }, IntPtr.Zero);
-
-            return handles;
+            List<IntPtr> result = new List<IntPtr>();
+            GetAllWindowsFromProcessID(targetProccessID, false, IntPtr.Zero, result);
+            return result;
         }
-
-
+        private static void GetAllWindowsFromProcessID(int targetProcessID, bool onlyDirectChildren, IntPtr parent, List<IntPtr> handles)
+        {
+            IntPtr current = IntPtr.Zero;
+            do
+            {
+                current = User32.FindWindowEx(parent, current, null, null);
+                User32.GetWindowThreadProcessId(current, out uint processID);
+                if (processID == targetProcessID && current != IntPtr.Zero)
+                {
+                    handles.Add(current);
+                    if (!onlyDirectChildren)
+                        GetAllWindowsFromProcessID(targetProcessID, onlyDirectChildren, current, handles);
+                }
+            } while (current != IntPtr.Zero);
+        }
     }
 }

@@ -25,6 +25,17 @@ namespace Process.NET.Assembly
         }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="AssemblyFactory" /> class.
+        ///     With the default assembler <see cref="Fasm32Assembler"/>
+        /// </summary>
+        /// <param name="process">The process.</param>
+        public AssemblyFactory(IProcess process)
+            : this(process, new Fasm32Assembler())
+        {
+
+        }
+
+        /// <summary>
         ///     Gets or sets the assembler.
         /// </summary>
         /// <value>

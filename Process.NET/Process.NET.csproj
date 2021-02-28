@@ -80,6 +80,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Fasm.NET, Version=1.0.4939.27955, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\Fasm.NET.1.70.03.2\lib\Fasm.NET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -91,6 +94,7 @@
     <Compile Include="Applied\Detours\DetourManager.cs" />
     <Compile Include="Applied\Patches\Patch.cs" />
     <Compile Include="Applied\Patches\PatchManager.cs" />
+    <Compile Include="Assembly\Assemblers\Fasm32Assembler.cs" />
     <Compile Include="Assembly\AssemblyFactory.cs" />
     <Compile Include="Extensions\NativeExtensions.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
@@ -188,7 +192,9 @@
     <Compile Include="ExternalProcessMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

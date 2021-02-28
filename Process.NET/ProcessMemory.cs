@@ -44,7 +44,7 @@ namespace Process.NET.Memory
         ///     char).
         /// </param>
         /// <returns>The string.</returns>
-        public string ReadString(IntPtr intPtr, Encoding encoding, int maxLength)
+        public string ReadString(IntPtr intPtr, Encoding encoding, int maxLength = 512)
         {
             var buffer = Read(intPtr, maxLength);
             var ret = encoding.GetString(buffer);

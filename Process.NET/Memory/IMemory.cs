@@ -25,7 +25,7 @@ namespace Process.NET.Memory
         ///     char).
         /// </param>
         /// <returns>The string.</returns>
-        string ReadString(IntPtr intPtr, Encoding encoding, int maxLength);
+        string ReadString(IntPtr intPtr, Encoding encoding, int maxLength = 512);
 
         /// <summary>
         ///     Reads the value of a specified type from memory.

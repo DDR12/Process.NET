@@ -108,8 +108,8 @@ namespace Process.NET.Native
         ///     to the variable; otherwise, it does not.
         /// </param>
         /// <returns>The return value is the identifier of the thread that created the window.</returns>
-        [DllImport("user32.dll")]
-        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+        [DllImport("user32.dll", SetLastError =true)]
+        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         /// <summary>
         ///     Enumerates the child windows that belong to the specified parent window by passing the handle to each child window,
@@ -133,6 +133,42 @@ namespace Process.NET.Native
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool EnumChildWindows(IntPtr hwndParent, EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        /// <summary>
+        /// Get the handle of the parent window of the passed child.
+        /// </summary>
+        /// <param name="hWnd">
+        /// The handle of the window whose parent to get.
+        /// </param>
+        /// <returns>
+        /// The handle of the parent window.
+        /// </returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetParent(IntPtr hWnd);
+
+        /// <summary>
+        /// Retrieves a handle to a window whose class name and window name match the specified strings. The function searches child windows, beginning with the one following the specified child window. 
+        /// This function does not perform a case-sensitive search.
+        /// </summary>
+        /// <param name="parentHandle">
+        /// A handle to the parent window whose child windows are to be searched.
+        /// If hwndParent is NULL, the function uses the desktop window as the parent window. 
+        /// The function searches among windows that are child windows of the desktop.
+        /// If hwndParent is HWND_MESSAGE, the function searches all message-only windows.
+        /// </param>
+        /// <param name="childAfter">
+        /// A handle to a child window. The search begins with the next child window in the Z order. 
+        /// The child window must be a direct child window of hwndParent, not just a descendant window.
+        /// If hwndChildAfter is NULL, the search begins with the first child window of hwndParent.
+        /// Note that if both hwndParent and hwndChildAfter are NULL, the function searches all top-level and message-only windows.</param>
+        /// <param name="className">
+        /// The class name or a class atom created by a previous call to the RegisterClass or RegisterClassEx function. 
+        /// The atom must be placed in the low-order word of lpszClass; the high-order word must be zero.
+        /// </param>
+        /// <param name="windowTitle">The window name (the window's title). If this parameter is NULL, all window names match.</param>
+        /// <returns></returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, string windowTitle);
 
         /// <summary>
         ///     Flashes the specified window one time. It does not change the active state of the window.
