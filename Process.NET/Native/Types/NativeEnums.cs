@@ -906,6 +906,17 @@ namespace Process.NET.Native.Types
         MinimumStackCommit = 0x208
     }
 
+    [Flags]
+    public enum NtProcessAccessFlags
+    {
+        DELETE = 0x00010000,
+        READ_CONTROL = 0x00020000,
+        WRITE_DAC = 0x00040000,
+        WRITE_OWNER = 0x00080000,
+        SYNCHRONIZE = 0x00100000,
+        END = 0xFFF, //if you have Windows XP or Windows Server 2003 you must change this to 0xFFFF
+        PROCESS_ALL_ACCESS = DELETE | READ_CONTROL | WRITE_DAC | WRITE_OWNER | SYNCHRONIZE | END,
+    }
     /// <summary>
     ///     Process access rights list.
     /// </summary>

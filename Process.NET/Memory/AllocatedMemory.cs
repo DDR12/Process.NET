@@ -52,30 +52,29 @@ namespace Process.NET.Memory
         /// <remarks>Don't use the IDisposable pattern because the class is sealed.</remarks>
         public virtual void Dispose()
         {
-            if (!IsDisposed)
+            if (IsDisposed)
+                return;
+            // Set the flag to true
+            IsDisposed = true;
+            if (!process.HasExited)
             {
-                // Set the flag to true
-                IsDisposed = true;
-                if (!process.HasExited)
+                try
                 {
-                    try
-                    {
-                        // Release the allocated memory
-                        Release();
-                    }
-                    catch (Win32Exception ex)
-                    {
-                        // Rethrow the exception but with the region's name.
-                        throw new Win32Exception($"Allocated memory: {Identifier} in process id {process.Id}, {ex.Message}");
-                    }
+                    // Release the allocated memory
+                    Release();
                 }
-                // Remove this object from the collection of allocated memory
-                Process.MemoryFactory.Deallocate(this);
-                // Remove the pointer
-                BaseAddress = IntPtr.Zero;
-                // Avoid the finalizer 
-                GC.SuppressFinalize(this);
+                catch (Win32Exception ex)
+                {
+                    // Rethrow the exception but with the region's name.
+                    throw new Win32Exception($"Allocated memory: {Identifier} in process id {process.Id}, {ex.Message}");
+                }
             }
+            // Remove this object from the collection of allocated memory
+            Process.MemoryFactory.Deallocate(this);
+            // Remove the pointer
+            BaseAddress = IntPtr.Zero;
+            // Avoid the finalizer 
+            GC.SuppressFinalize(this);
         }
 
 

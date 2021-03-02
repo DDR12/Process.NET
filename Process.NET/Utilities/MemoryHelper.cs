@@ -40,19 +40,6 @@ namespace Process.NET.Utilities
             throw new Win32Exception($"Couldn't allocate memory of {size} byte(s).");
         }
 
-        /// <summary>
-        ///     Closes an open object handle.
-        /// </summary>
-        /// <param name="handle">A valid handle to an open object.</param>
-        public static void CloseHandle(IntPtr handle)
-        {
-            // Check if the handle is valid
-            HandleManipulator.ValidateAsArgument(handle, "handle");
-
-            // Close the handle
-            if (!Kernel32.CloseHandle(handle))
-                throw new Win32Exception($"Couldn't close he handle 0x{handle}.");
-        }
 
         /// <summary>
         ///     Releases a region of memory within the virtual address space of a specified process.
@@ -68,7 +55,7 @@ namespace Process.NET.Utilities
             // Free the memory
             if (!Kernel32.VirtualFreeEx(processHandle, address, 0, MemoryReleaseFlags.Release))
                 // If the memory wasn't correctly freed, throws an exception
-                throw new Win32Exception($"The memory page for process {processHandle} at 0x{address.ToString("X")} cannot be freed.");
+                throw new Win32Exception($"The memory page for process at 0x{address.ToString("X")} cannot be freed.");
         }
 
         /// <summary>

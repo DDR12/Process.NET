@@ -21,6 +21,7 @@ namespace Process.NET.Memory
         /// </summary>
         protected readonly IProcess Process;
 
+        protected bool isDisposed = false;
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryFactory" /> class.
         /// </summary>
@@ -102,6 +103,9 @@ namespace Process.NET.Memory
         /// </summary>
         public virtual void Dispose()
         {
+            if (isDisposed)
+                return;
+            isDisposed = true;
             // Release all allocated memories which must be disposed
             foreach (var allocatedMemory in InternalRemoteAllocations.Where(m => m.MustBeDisposed).ToArray())
                 allocatedMemory.Dispose();

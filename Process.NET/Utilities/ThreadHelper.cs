@@ -30,16 +30,23 @@ namespace Process.NET.Utilities
             HandleManipulator.ValidateAsArgument(startAddress, "startAddress");
 
             // Create the remote thread
-            int threadId;
-            var ret = Kernel32.CreateRemoteThread(processHandle, IntPtr.Zero, 0, startAddress, parameter, creationFlags,
-                out threadId);
+            //int threadId;
 
+            //var ret = Kernel32.CreateRemoteThread(processHandle, IntPtr.Zero, 0, startAddress, parameter, creationFlags,
+            //    out threadId);
+
+            IntPtr threadHandle = IntPtr.Zero;
+            NtClientId clientIDRef = default;
+            var createResult = Nt.RtlCreateUserThread(processHandle, IntPtr.Zero, (creationFlags & ThreadCreationFlags.Suspended) == ThreadCreationFlags.Suspended,
+                0, IntPtr.Zero, IntPtr.Zero, startAddress, parameter, ref threadHandle, ref clientIDRef);
+
+            SafeMemoryHandle ret = new SafeMemoryHandle(threadHandle);
             // If the thread is created
-            if (!ret.IsClosed && !ret.IsInvalid)
+            if (Nt.IsNT_StatusSuccess(createResult) && !ret.IsClosed && !ret.IsInvalid)
                 return ret;
 
             // Else couldn't create thread, throws an exception
-            throw new Win32Exception($"Couldn't create the thread at 0x{startAddress.ToString("X")}.");
+            throw new Win32Exception($"Couldn't create the thread at 0x{startAddress.ToString("X")}, flag {createResult}.");
         }
 
         /// <summary>

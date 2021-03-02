@@ -23,7 +23,7 @@ namespace Process.NET.Utilities
 
             // Close the handle
             if (!Kernel32.CloseHandle(handle))
-                throw new Win32Exception("Couldn't close the handle correctly.");
+                throw new Win32Exception($"Couldn't close he handle 0x{handle}.");
         }
 
         /// <summary>
