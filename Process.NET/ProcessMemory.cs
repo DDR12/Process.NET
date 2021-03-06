@@ -23,6 +23,7 @@ namespace Process.NET.Memory
         /// </summary>
         protected ConcurrentDictionary<IntPtr, string> rttiCache = null;
 
+        protected readonly bool is32Bit = false;
         /// <summary>
         ///     Initializes a new instance of the <see cref="ProcessMemory" /> class.
         /// </summary>
@@ -30,6 +31,7 @@ namespace Process.NET.Memory
         protected ProcessMemory(SafeMemoryHandle handle)
         {
             Handle = handle;
+            is32Bit = Kernel32.Is32BitProcess(handle.DangerousGetHandle());
             rttiCache = new ConcurrentDictionary<IntPtr, string>();
         }
 
@@ -140,9 +142,9 @@ namespace Process.NET.Memory
                     var objectLocatorPtr = Read<IntPtr>(address - IntPtr.Size);
                     if (objectLocatorPtr.MayBeValid())
                     {
-                        if (IntPtr.Size == 4)
+                        if (is32Bit)
                             rtti = ReadRemoteRuntimeTypeInformation32(objectLocatorPtr);
-                        else if (IntPtr.Size == 8)
+                        else
                             rtti = ReadRemoteRuntimeTypeInformation64(objectLocatorPtr);
 
                         rttiCache.AddOrUpdate(address, toAdd =>
