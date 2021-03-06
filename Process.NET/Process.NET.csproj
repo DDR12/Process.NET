@@ -97,11 +97,13 @@
     <Compile Include="Applied\Patches\PatchManager.cs" />
     <Compile Include="Assembly\Assemblers\Fasm32Assembler.cs" />
     <Compile Include="Assembly\AssemblyFactory.cs" />
+    <Compile Include="Extensions\IntPtrExtensions.cs" />
     <Compile Include="Extensions\NativeExtensions.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\ProcessModuleExtensions.cs" />
     <Compile Include="IProcess.cs" />
     <Compile Include="Memory\MemoryType.cs" />
+    <Compile Include="Native\DbgHelp.cs" />
     <Compile Include="Patterns\PatternScanner.cs" />
     <Compile Include="ProcessSharp.cs" />
     <Compile Include="Windows\Keyboard\KeyboardHookEventArgs.cs" />

@@ -4,6 +4,81 @@ using System.Runtime.InteropServices;
 
 namespace Process.NET.Native.Types
 {
+    [Flags]
+    public enum UnDecorateFlags
+    {
+        /// <summary>
+        /// Enable full undecoration
+        /// </summary>
+        UNDNAME_COMPLETE = (0x0000),
+        /// <summary>
+        /// Remove leading underscores from MS extended keywords
+        /// </summary>
+        UNDNAME_NO_LEADING_UNDERSCORES = (0x0001),
+        /// <summary>
+        /// Disable expansion of MS extended keywords
+        /// </summary>
+        UNDNAME_NO_MS_KEYWORDS = (0x0002),
+        /// <summary>
+        /// Disable expansion of return type for primary declaration
+        /// </summary>
+        UNDNAME_NO_FUNCTION_RETURNS = (0x0004),
+        /// <summary>
+        /// Disable expansion of the declaration model
+        /// </summary>
+        UNDNAME_NO_ALLOCATION_MODEL = (0x0008),
+        /// <summary>
+        /// Disable expansion of the declaration language specifier
+        /// </summary>
+        UNDNAME_NO_ALLOCATION_LANGUAGE = (0x0010),
+        /// <summary>
+        /// NYI Disable expansion of MS keywords on the 'this' type for primary declaration
+        /// </summary>
+        UNDNAME_NO_MS_THISTYPE = (0x0020),
+        /// <summary>
+        /// NYI Disable expansion of CV modifiers on the 'this' type for primary declaration
+        /// </summary>
+        UNDNAME_NO_CV_THISTYPE = (0x0040),
+        /// <summary>
+        /// Disable all modifiers on the 'this' type
+        /// </summary>
+        UNDNAME_NO_THISTYPE = (0x0060),
+        /// <summary>
+        /// Disable expansion of access specifiers for members
+        /// </summary>
+        UNDNAME_NO_ACCESS_SPECIFIERS = (0x0080),
+        /// <summary>
+        /// Disable expansion of 'throw-signatures' for functions and pointers to functions
+        /// </summary>
+        UNDNAME_NO_THROW_SIGNATURES = (0x0100),
+        /// <summary>
+        /// Disable expansion of 'static' or 'virtual'ness of members
+        /// </summary>
+        UNDNAME_NO_MEMBER_TYPE = (0x0200),
+        /// <summary>
+        /// Disable expansion of MS model for UDT returns
+        /// </summary>
+        UNDNAME_NO_RETURN_UDT_MODEL = (0x0400),
+        /// <summary>
+        /// Undecorate 32-bit decorated names
+        /// </summary>
+        UNDNAME_32_BIT_DECODE = (0x0800),
+        /// <summary>
+        /// Crack only the name for primary declaration;
+        /// </summary>
+        UNDNAME_NAME_ONLY = (0x1000),
+
+        /// <summary>
+        /// return just [scope::]name.  Does expand template params
+        /// Don't undecorate arguments to function
+        /// </summary>
+        UNDNAME_NO_ARGUMENTS = (0x2000),
+        /// <summary>
+        /// Don't undecorate special names (v-table, vcall, vector xxx, metatype, etc)
+        /// </summary>
+        UNDNAME_NO_SPECIAL_SYMS = (0x4000),
+    }
+
     /// <summary>
     ///     A list of calling conventions.
     /// </summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using Process.NET.Memory;
 using Process.NET.Modules;

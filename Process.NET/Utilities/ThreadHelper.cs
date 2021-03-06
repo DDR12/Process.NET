@@ -7,7 +7,7 @@ using Process.NET.Native.Types;
 namespace Process.NET.Utilities
 {
     /// <summary>
-    ///     Static core class providing tools for manipulating threads.
+    /// Static core class providing tools for manipulating threads.
     /// </summary>
     public static class ThreadHelper
     {

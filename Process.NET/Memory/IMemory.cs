@@ -74,5 +74,12 @@ namespace Process.NET.Memory
         /// <param name="intPtr">The address where the value is written.</param>
         /// <param name="value">The value to write.</param>
         void Write<T>(IntPtr intPtr, T value);
+
+        /// <summary>
+        /// Reads the Runtime Type Information (RTTI) at certain address.
+        /// </summary>
+        /// <param name="address">Address to read the type from.</param>
+        /// <returns>Runtime Type Information of the object at the passed address or null if it's not an object.</returns>
+        string ReadRemoteRuntimeTypeInformation(IntPtr address);
     }
 }

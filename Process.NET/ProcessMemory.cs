@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Text;
+using Process.NET.Extensions;
+using Process.NET.Native;
 using Process.NET.Native.Types;
 
 namespace Process.NET.Memory
@@ -16,12 +19,18 @@ namespace Process.NET.Memory
         protected readonly SafeMemoryHandle Handle;
 
         /// <summary>
+        /// Runtime types names based on their addresses.
+        /// </summary>
+        protected ConcurrentDictionary<IntPtr, string> rttiCache = null;
+
+        /// <summary>
         ///     Initializes a new instance of the <see cref="ProcessMemory" /> class.
         /// </summary>
         /// <param name="handle">The open handle to the process which contains the memory of interest.</param>
         protected ProcessMemory(SafeMemoryHandle handle)
         {
             Handle = handle;
+            rttiCache = new ConcurrentDictionary<IntPtr, string>();
         }
 
         /// <summary>
@@ -116,5 +125,156 @@ namespace Process.NET.Memory
         /// <param name="intPtr">The address where the value is written.</param>
         /// <param name="value">The value to write.</param>
         public abstract void Write<T>(IntPtr intPtr, T value);
+
+        /// <summary>
+        /// Reads the Runtime Type Information (RTTI) at certain address.
+        /// </summary>
+        /// <param name="address">Address to read the type from.</param>
+        /// <returns>Runtime Type Information of the object at the passed address or null if it's not an object.</returns>
+        public string ReadRemoteRuntimeTypeInformation(IntPtr address)
+        {
+            if (address.MayBeValid())
+            {
+                if(!rttiCache.TryGetValue(address, out string rtti))
+                {
+                    var objectLocatorPtr = Read<IntPtr>(address - IntPtr.Size);
+                    if (objectLocatorPtr.MayBeValid())
+                    {
+                        if (IntPtr.Size == 4)
+                            rtti = ReadRemoteRuntimeTypeInformation32(objectLocatorPtr);
+                        else if (IntPtr.Size == 8)
+                            rtti = ReadRemoteRuntimeTypeInformation64(objectLocatorPtr);
+
+                        rttiCache.AddOrUpdate(address, toAdd =>
+                        {
+                            return rtti;
+                        }, (toUpdate, old) =>
+                        {
+                            if (old != rtti)
+                                old = rtti;
+                            return old;
+                        });
+                    }
+                }
+                return rtti;
+            }
+
+            return null;
+        }
+        private string ReadRemoteRuntimeTypeInformation32(IntPtr address)
+        {
+            var classHierarchyDescriptorPtr = Read<IntPtr>(address + 0x10);
+            if (classHierarchyDescriptorPtr.MayBeValid())
+            {
+                var baseClassCount = Read<int>(classHierarchyDescriptorPtr + 8);
+                if (baseClassCount > 0 && baseClassCount < 25)
+                {
+                    var baseClassArrayPtr = Read<IntPtr>(classHierarchyDescriptorPtr + 0xC);
+                    if (baseClassArrayPtr.MayBeValid())
+                    {
+                        var sb = new StringBuilder();
+                        for (var i = 0; i < baseClassCount; ++i)
+                        {
+                            var baseClassDescriptorPtr = Read<IntPtr>(baseClassArrayPtr + (4 * i));
+                            if (baseClassDescriptorPtr.MayBeValid())
+                            {
+                                var typeDescriptorPtr = Read<IntPtr>(baseClassDescriptorPtr);
+                                if (typeDescriptorPtr.MayBeValid())
+                                {
+                                    var name = ReadString(typeDescriptorPtr + 0x0C, Encoding.UTF8, 60);
+                                    if (name.EndsWith("@@"))
+                                    {
+                                        name = DbgHelp.UnDecorateSymbolName($"?{name}", UnDecorateFlags.UNDNAME_NAME_ONLY);
+                                    }
+                                    sb.Append(name);
+                                    sb.Append(" : ");
+
+                                    continue;
+                                }
+                            }
+
+                            break;
+                        }
+
+                        if (sb.Length != 0)
+                        {
+                            sb.Length -= 3;
+
+                            return sb.ToString();
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+        private string ReadRemoteRuntimeTypeInformation64(IntPtr address)
+        {
+            int baseOffset = Read<int>(address + 0x14);
+            if (baseOffset != 0)
+            {
+                var baseAddress = address - baseOffset;
+
+                var classHierarchyDescriptorOffset = Read<int>(address + 0x10);
+                if (classHierarchyDescriptorOffset != 0)
+                {
+                    var classHierarchyDescriptorPtr = baseAddress + classHierarchyDescriptorOffset;
+
+                    var baseClassCount = Read<int>(classHierarchyDescriptorPtr + 0x08);
+                    if (baseClassCount > 0 && baseClassCount < 25)
+                    {
+                        var baseClassArrayOffset = Read<int>(classHierarchyDescriptorPtr + 0x0C);
+                        if (baseClassArrayOffset != 0)
+                        {
+                            var baseClassArrayPtr = baseAddress + baseClassArrayOffset;
+
+                            var sb = new StringBuilder();
+                            for (var i = 0; i < baseClassCount; ++i)
+                            {
+                                var baseClassDescriptorOffset = Read<int>(baseClassArrayPtr + (4 * i));
+                                if (baseClassDescriptorOffset != 0)
+                                {
+                                    var baseClassDescriptorPtr = baseAddress + baseClassDescriptorOffset;
+
+                                    var typeDescriptorOffset = Read<int>(baseClassDescriptorPtr);
+                                    if (typeDescriptorOffset != 0)
+                                    {
+                                        var typeDescriptorPtr = baseAddress + typeDescriptorOffset;
+
+                                        var name = ReadString(typeDescriptorPtr + 0x14, Encoding.UTF8, 60);
+                                        if (string.IsNullOrEmpty(name))
+                                        {
+                                            break;
+                                        }
+
+                                        if (name.EndsWith("@@"))
+                                        {
+                                            name = DbgHelp.UnDecorateSymbolName($"?{name}", UnDecorateFlags.UNDNAME_NAME_ONLY);
+                                        }
+
+                                        sb.Append(name);
+                                        sb.Append(" : ");
+
+                                        continue;
+                                    }
+                                }
+
+                                break;
+                            }
+
+                            if (sb.Length != 0)
+                            {
+                                sb.Length -= 3;
+
+                                return sb.ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
     }
 }
