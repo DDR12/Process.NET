@@ -5,9 +5,6 @@ Process.NET is a tool for interacting with processes based around a library call
  https://github.com/ZenLulz/MemorySharp/
  
  http://binarysharp.com/
- 
-Process.NET is simply a result of both me learning to program as a newer developer interested in both C# and native code, and the lack of a few features I desired in the library I enjoyed using as a new programmer.
-
 ----------
 
 
