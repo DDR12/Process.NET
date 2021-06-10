@@ -1,9 +1,9 @@
 ﻿using System;
-using Process.NET.Marshaling;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Marshaling;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Class for memory editing a process.

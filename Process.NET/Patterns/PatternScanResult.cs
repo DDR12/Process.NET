@@ -1,6 +1,6 @@
 using System;
 
-namespace Process.NET.Patterns
+namespace ProcessNET.Patterns
 {
     public struct PatternScanResult
     {

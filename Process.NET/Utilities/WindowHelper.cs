@@ -5,12 +5,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using Process.NET.Marshaling;
-using Process.NET.Native;
-using Process.NET.Native.Types;
-using Process.NET.Windows;
+using ProcessNET.Marshaling;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
+using ProcessNET.Windows;
 
-namespace Process.NET.Utilities
+namespace ProcessNET.Utilities
 {
     /// <summary>
     ///     Static core class providing tools for managing windows.

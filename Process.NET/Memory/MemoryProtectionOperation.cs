@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable All
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     public enum MemoryProtectionType
     {

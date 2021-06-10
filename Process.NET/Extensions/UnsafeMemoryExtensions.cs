@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Process.NET.Marshaling;
-using Process.NET.Native;
+using ProcessNET.Marshaling;
+using ProcessNET.Native;
 
-namespace Process.NET.Extensions
+namespace ProcessNET.Extensions
 {
     public static class FastCall
     {

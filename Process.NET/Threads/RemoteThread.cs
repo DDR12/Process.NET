@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Process.NET.Marshaling;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Marshaling;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 using ThreadState = System.Diagnostics.ThreadState;
 
-namespace Process.NET.Threads
+namespace ProcessNET.Threads
 {
     /// <summary>
     ///     Class representing a thread in the remote process.

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using Process.NET.Marshaling;
+using ProcessNET.Marshaling;
 
-namespace Process.NET.Modules
+namespace ProcessNET.Modules
 {
     /// <summary>
     ///     Class representing an injected module in a remote process.

@@ -3,7 +3,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Security.Permissions;
 using Microsoft.Win32.SafeHandles;
 
-namespace Process.NET.Native.Types
+namespace ProcessNET.Native.Types
 {
     /// <summary>
     ///     Represents a Win32 handle safely managed.

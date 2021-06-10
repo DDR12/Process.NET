@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Class representing an allocated memory in a remote process.

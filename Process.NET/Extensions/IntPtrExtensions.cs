@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Process.NET.Extensions
+namespace ProcessNET.Extensions
 {
     public static class IntPtrExtensions
     {

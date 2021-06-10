@@ -1,6 +1,6 @@
-using Process.NET.Marshaling;
+using ProcessNET.Marshaling;
 
-namespace Process.NET.Applied
+namespace ProcessNET.Applied
 {
     public interface IApplied : IDisposableState
     {

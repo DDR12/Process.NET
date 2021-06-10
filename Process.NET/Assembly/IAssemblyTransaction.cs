@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Process.NET.Assembly
+namespace ProcessNET.Assembly
 {
     public interface IAssemblyTransaction
     {

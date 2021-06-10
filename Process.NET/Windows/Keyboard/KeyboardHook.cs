@@ -3,10 +3,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Process.NET.Applied;
-using Process.NET.Native.Types;
+using ProcessNET.Applied;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Windows.Keyboard
+namespace ProcessNET.Windows.Keyboard
 {
     public class KeyboardHook : IApplied
     {

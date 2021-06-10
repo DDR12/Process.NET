@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace Process.NET.Native.Types
+namespace ProcessNET.Native.Types
 {
     [Flags]
     public enum UnDecorateFlags

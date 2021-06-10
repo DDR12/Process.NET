@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Process.NET.Modules
+namespace ProcessNET.Modules
 {
     public interface IModuleFactory : IDisposable
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using Process.NET.Marshaling;
+using ProcessNET.Marshaling;
 
-namespace Process.NET.Native.Types
+namespace ProcessNET.Native.Types
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct MSLLHOOKSTRUCT

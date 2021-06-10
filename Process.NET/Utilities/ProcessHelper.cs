@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Security.Principal;
-using Process.NET.Extensions;
-using Process.NET.Native;
-using Process.NET.Native.Types;
+using ProcessNET.Extensions;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
 using ProcessModule = System.Diagnostics.ProcessModule;
 using ProcessThread = System.Diagnostics.ProcessThread;
 using SystemProcess = System.Diagnostics.Process;
 
-namespace Process.NET.Utilities
+namespace ProcessNET.Utilities
 {
     public static class ProcessHelper
     {

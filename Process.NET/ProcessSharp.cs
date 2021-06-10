@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using Process.NET.Memory;
-using Process.NET.Modules;
-using Process.NET.Native.Types;
-using Process.NET.Threads;
-using Process.NET.Utilities;
-using Process.NET.Windows;
+using ProcessNET.Memory;
+using ProcessNET.Modules;
+using ProcessNET.Native.Types;
+using ProcessNET.Threads;
+using ProcessNET.Utilities;
+using ProcessNET.Windows;
 
-namespace Process.NET
+namespace ProcessNET
 {
     /// <summary>
     ///     A class that offsers several tools to interact with a process.

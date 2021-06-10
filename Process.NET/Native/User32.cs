@@ -2,9 +2,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Native
+namespace ProcessNET.Native
 {
     public static class User32
     {

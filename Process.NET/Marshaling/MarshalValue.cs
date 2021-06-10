@@ -7,7 +7,7 @@
  * See the file LICENSE for more information.
 */
 
-namespace Process.NET.Marshaling
+namespace ProcessNET.Marshaling
 {
     /// <summary>
     ///     The factory to create instance of the <see cref="MarshalledValue{T}" /> class.

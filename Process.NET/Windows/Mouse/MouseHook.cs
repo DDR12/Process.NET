@@ -1,10 +1,10 @@
 using System;
 using System.Runtime.InteropServices;
-using Process.NET.Applied;
-using Process.NET.Native;
-using Process.NET.Native.Types;
+using ProcessNET.Applied;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Windows.Mouse
+namespace ProcessNET.Windows.Mouse
 {
     public enum HookEventType
     {

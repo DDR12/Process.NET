@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Process.NET.Patterns
+namespace ProcessNET.Patterns
 {
     public class DwordPattern : IMemoryPattern
     {
@@ -10,33 +10,30 @@ namespace Process.NET.Patterns
         private readonly string _mask;
 
         public readonly string PatternText;
+        public int SearchStartOffset { get; set; }
+        public MemoryPatternType PatternType { get; }
+        public PatternScannerAlgorithm Algorithm { get; }
 
-        public DwordPattern(string dwordPattern)
+        public DwordPattern(string dwordPattern, int startOffset = 0, PatternScannerAlgorithm algorithm = PatternScannerAlgorithm.Naive)
         {
+            this.PatternType = MemoryPatternType.Function;
+            this.Algorithm = algorithm;
+            this.SearchStartOffset = startOffset;
             PatternText = dwordPattern;
-            PatternType = MemoryPatternType.Function;
-            Offset = 0;
             _bytes = GetBytesFromDwordPattern(dwordPattern);
             _mask = GetMaskFromDwordPattern(dwordPattern);
         }
-        public DwordPattern(byte[] pattern)
+        public DwordPattern(byte[] pattern, int startOffset = 0, PatternScannerAlgorithm algorithm = PatternScannerAlgorithm.Naive)
         {
+            this.PatternType = MemoryPatternType.Function;
+            this.Algorithm = algorithm;
+            this.SearchStartOffset = startOffset;
             PatternText = string.Join(" ", pattern.Select(o => o.ToString("X2")));
-            PatternType = MemoryPatternType.Function;
             _bytes = new byte[pattern.Length];
             for (int i = 0; i < _bytes.Length; i++)
                 _bytes[i] = pattern[i];
             _mask = new string(Enumerable.Repeat<char>('x', _bytes.Length).ToArray());
         }
-        public DwordPattern(string pattern, int offset)
-        {
-            PatternText = pattern;
-            PatternType = MemoryPatternType.Data;
-            Offset = offset;
-            _bytes = GetBytesFromDwordPattern(pattern);
-            _mask = GetMaskFromDwordPattern(pattern);
-        }
-
         public IList<byte> GetBytes()
         {
             return _bytes;
@@ -47,8 +44,6 @@ namespace Process.NET.Patterns
             return _mask;
         }
 
-        public int Offset { get; }
-        public MemoryPatternType PatternType { get; }
 
         private static string GetMaskFromDwordPattern(string pattern)
         {

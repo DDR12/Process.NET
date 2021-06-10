@@ -105,7 +105,9 @@
     <Compile Include="Memory\MemoryType.cs" />
     <Compile Include="Native\DbgHelp.cs" />
     <Compile Include="Patterns\PatternScanner.cs" />
+    <Compile Include="Patterns\PatternScannerAlgorithm.cs" />
     <Compile Include="ProcessSharp.cs" />
+    <Compile Include="Utilities\StringSearching.cs" />
     <Compile Include="Windows\Keyboard\KeyboardHookEventArgs.cs" />
     <Compile Include="Windows\Message.cs" />
     <Compile Include="Windows\Mouse\MouseHookEventArgs.cs" />
@@ -198,6 +200,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

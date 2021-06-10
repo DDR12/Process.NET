@@ -1,7 +1,7 @@
 using System;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Windows.Keyboard
+namespace ProcessNET.Windows.Keyboard
 {
     /// <summary>
     ///     Class defining a virtual keyboard.

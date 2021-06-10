@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Process.NET.Utilities
+namespace ProcessNET.Utilities
 {
     /// <summary>
     ///     Static helper class providing tools for generating random numbers or strings.

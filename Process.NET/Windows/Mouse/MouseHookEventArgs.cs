@@ -1,6 +1,6 @@
-﻿using Process.NET.Native.Types;
+﻿using ProcessNET.Native.Types;
 
-namespace Process.NET.Windows.Mouse
+namespace ProcessNET.Windows.Mouse
 {
     public class MouseHookEventArgs : HookEventArgs
     {

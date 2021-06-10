@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using Process.NET.Extensions;
-using Process.NET.Memory;
+using ProcessNET.Extensions;
+using ProcessNET.Memory;
 
-namespace Process.NET.Applied.Detours
+namespace ProcessNET.Applied.Detours
 {
     public enum DetourCreateFlags
     {

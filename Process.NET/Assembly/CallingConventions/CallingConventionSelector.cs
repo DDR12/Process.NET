@@ -1,7 +1,7 @@
 ﻿using System;
-using Process.NET.Utilities;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Assembly.CallingConventions
+namespace ProcessNET.Assembly.CallingConventions
 {
     /// <summary>
     ///     Static class providing calling convention instances.

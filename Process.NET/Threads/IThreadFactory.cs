@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Process.NET.Threads
+namespace ProcessNET.Threads
 {
     public interface IThreadFactory : IDisposable
     {

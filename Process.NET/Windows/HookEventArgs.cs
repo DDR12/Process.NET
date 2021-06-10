@@ -1,7 +1,7 @@
 using System;
-using Process.NET.Windows.Mouse;
+using ProcessNET.Windows.Mouse;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     public abstract class HookEventArgs : EventArgs
     {

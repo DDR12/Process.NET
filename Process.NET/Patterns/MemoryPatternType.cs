@@ -1,4 +1,4 @@
-namespace Process.NET.Patterns
+namespace ProcessNET.Patterns
 {
     public enum MemoryPatternType
     {

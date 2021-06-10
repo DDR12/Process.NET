@@ -10,7 +10,7 @@ using ADDR = System.UInt64;
 using ADDR = System.UInt32;
 #endif
 
-namespace Process.NET.Applied
+namespace ProcessNET.Applied
 {
     public class AppliedUtilities
     {

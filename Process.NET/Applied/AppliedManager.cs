@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Process.NET.Applied
+namespace ProcessNET.Applied
 {
     [SuppressMessage("ReSharper", "LoopCanBePartlyConvertedToQuery")]
     public class AppliedManager<T> : IAppliedManager<T> where T : IApplied

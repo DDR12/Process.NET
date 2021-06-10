@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Class representing a block of memory allocated in the local process.

@@ -2,9 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Windows.Keyboard
+namespace ProcessNET.Windows.Keyboard
 {
     public class KeyboardHookEventArgs
     {

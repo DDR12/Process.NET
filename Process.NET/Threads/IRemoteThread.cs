@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Threads
+namespace ProcessNET.Threads
 {
     public interface IRemoteThread : IDisposable
     {

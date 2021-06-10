@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Process.NET.Marshaling
+namespace ProcessNET.Marshaling
 {
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
     public static class MarshalCache<T>

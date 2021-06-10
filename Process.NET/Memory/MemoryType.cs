@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     public enum MemoryType
     {

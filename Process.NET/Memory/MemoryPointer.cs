@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Class representing a pointer in the memory of the remote process.

@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Process.NET.Native;
+using ProcessNET.Native;
 
-namespace Process.NET.Utilities
+namespace ProcessNET.Utilities
 {
     /// <summary>
     ///     Static core class providing tools for manipulating modules and libraries.

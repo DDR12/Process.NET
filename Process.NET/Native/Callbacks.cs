@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Process.NET.Native
+namespace ProcessNET.Native
 {
     /// <summary>
     ///     This delegate matches the type of parameter "lpfn" for the NativeMethods method "SetWindowsHookEx".

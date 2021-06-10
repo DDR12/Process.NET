@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     public interface IMemoryFactory : IDisposable
     {

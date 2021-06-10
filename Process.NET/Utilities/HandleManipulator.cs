@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using Process.NET.Native;
-using Process.NET.Native.Types;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Utilities
+namespace ProcessNET.Utilities
 {
     /// <summary>
     ///     Static helper class providing tools for manipulating handles.

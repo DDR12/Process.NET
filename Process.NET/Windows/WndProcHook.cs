@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Process.NET.Applied;
-using Process.NET.Native;
-using Process.NET.Native.Types;
+using ProcessNET.Applied;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     public delegate IntPtr WindowProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 

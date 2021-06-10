@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Process.NET.Modules
+namespace ProcessNET.Modules
 {
     public interface IProcessFunction
     {

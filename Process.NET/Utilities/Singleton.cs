@@ -1,4 +1,4 @@
-﻿namespace Process.NET.Utilities
+﻿namespace ProcessNET.Utilities
 {
     /// <summary>
     ///     Static helper used to create or get a singleton from another class.

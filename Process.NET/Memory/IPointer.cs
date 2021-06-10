@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     public interface IPointer
     {

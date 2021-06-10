@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Process.NET.Marshaling;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Marshaling;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Threads
+namespace ProcessNET.Threads
 {
     /// <summary>
     ///     Class providing tools for manipulating threads.

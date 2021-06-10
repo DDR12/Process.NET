@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Process.NET.Memory;
+using ProcessNET.Memory;
 
-namespace Process.NET.Modules
+namespace ProcessNET.Modules
 {
     /// <summary>
     ///     Class representing a function in the remote process.

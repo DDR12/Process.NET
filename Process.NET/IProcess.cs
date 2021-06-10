@@ -1,11 +1,11 @@
 using System;
-using Process.NET.Memory;
-using Process.NET.Modules;
-using Process.NET.Native.Types;
-using Process.NET.Threads;
-using Process.NET.Windows;
+using ProcessNET.Memory;
+using ProcessNET.Modules;
+using ProcessNET.Native.Types;
+using ProcessNET.Threads;
+using ProcessNET.Windows;
 
-namespace Process.NET
+namespace ProcessNET
 {
     /// <summary>
     ///     A class that offers several tools to interact with a process.

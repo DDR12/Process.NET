@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Text;
-using Process.NET.Extensions;
-using Process.NET.Native;
-using Process.NET.Native.Types;
+using ProcessNET.Extensions;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Class for memory editing a process.

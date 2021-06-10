@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using Process.NET.Utilities;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Extensions
+namespace ProcessNET.Extensions
 {
     public static class ProcessModuleExtensions
     {

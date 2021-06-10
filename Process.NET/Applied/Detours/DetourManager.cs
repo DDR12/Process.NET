@@ -1,9 +1,9 @@
 ﻿using System;
-using Process.NET.Extensions;
-using Process.NET.Memory;
-using Process.NET.Utilities;
+using ProcessNET.Extensions;
+using ProcessNET.Memory;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Applied.Detours
+namespace ProcessNET.Applied.Detours
 {
     /// <summary>
     ///     A manager class to handle function detours, and hooks.

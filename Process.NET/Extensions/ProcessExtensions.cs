@@ -3,10 +3,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Extensions
+namespace ProcessNET.Extensions
 {
     public static class ProcessExtensions
     {

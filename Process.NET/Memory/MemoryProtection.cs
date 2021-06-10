@@ -1,8 +1,8 @@
 using System;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Class providing tools for manipulating memory protection.

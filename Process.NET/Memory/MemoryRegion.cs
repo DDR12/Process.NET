@@ -1,10 +1,10 @@
 using System;
 using System.ComponentModel;
 using System.Security.Cryptography;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Represents a contiguous block of memory in the remote process.

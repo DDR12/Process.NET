@@ -1,15 +1,15 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Process.NET.Assembly.Assemblers;
-using Process.NET.Assembly.CallingConventions;
-using Process.NET.Marshaling;
-using Process.NET.Memory;
-using Process.NET.Native.Types;
-using Process.NET.Threads;
-using Process.NET.Utilities;
+using ProcessNET.Assembly.Assemblers;
+using ProcessNET.Assembly.CallingConventions;
+using ProcessNET.Marshaling;
+using ProcessNET.Memory;
+using ProcessNET.Native.Types;
+using ProcessNET.Threads;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Assembly
+namespace ProcessNET.Assembly
 {
     public class AssemblyFactory : IAssemblyFactory
     {

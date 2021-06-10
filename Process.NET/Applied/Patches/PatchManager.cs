@@ -1,7 +1,7 @@
 ﻿using System;
-using Process.NET.Memory;
+using ProcessNET.Memory;
 
-namespace Process.NET.Applied.Patches
+namespace ProcessNET.Applied.Patches
 {
     /// <summary>
     ///     A manager class to handle memory patches.

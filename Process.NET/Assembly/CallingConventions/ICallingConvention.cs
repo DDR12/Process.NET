@@ -1,7 +1,7 @@
 ﻿using System;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Assembly.CallingConventions
+namespace ProcessNET.Assembly.CallingConventions
 {
     /// <summary>
     ///     Interface defining a calling convention.

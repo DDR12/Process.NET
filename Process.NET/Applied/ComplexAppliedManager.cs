@@ -1,4 +1,4 @@
-namespace Process.NET.Applied
+namespace ProcessNET.Applied
 {
     public class ComplexAppliedManager<T> : AppliedManager<T>, IComplexAppliedManager<T> where T : IComplexApplied
     {

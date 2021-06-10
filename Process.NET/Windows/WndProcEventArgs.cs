@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     public class WndProcEventArgs : EventArgs
     {

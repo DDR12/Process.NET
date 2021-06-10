@@ -1,4 +1,4 @@
-namespace Process.NET.Windows.Mouse
+namespace ProcessNET.Windows.Mouse
 {
     public interface IMouse
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Process.NET.Utilities;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     /// <summary>
     ///     Class providing tools for manipulating windows.

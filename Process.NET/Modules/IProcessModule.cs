@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using Process.NET.Memory;
+using ProcessNET.Memory;
 
-namespace Process.NET.Modules
+namespace ProcessNET.Modules
 {
     public interface IProcessModule : IPointer
     {

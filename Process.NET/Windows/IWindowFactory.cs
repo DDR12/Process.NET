@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     public interface IWindowFactory : IDisposable
     {

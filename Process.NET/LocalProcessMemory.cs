@@ -1,10 +1,10 @@
 using System;
 using System.Runtime.InteropServices;
-using Process.NET.Extensions;
-using Process.NET.Native.Types;
+using ProcessNET.Extensions;
+using ProcessNET.Native.Types;
 
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     /// <summary>
     ///     Class for memory editing a process.

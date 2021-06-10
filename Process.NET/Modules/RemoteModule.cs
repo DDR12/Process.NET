@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Process.NET.Extensions;
-using Process.NET.Memory;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Extensions;
+using ProcessNET.Memory;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Modules
+namespace ProcessNET.Modules
 {
     /// <summary>
     ///     Class repesenting a module in the remote process.

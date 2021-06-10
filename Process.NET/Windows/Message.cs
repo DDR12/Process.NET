@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 

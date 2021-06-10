@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32.SafeHandles;
 
-namespace Process.NET.Native.Types
+namespace ProcessNET.Native.Types
 {
     /// <summary>
     ///     Provides a safe handle for a library loaded via LoadLibraryEx.

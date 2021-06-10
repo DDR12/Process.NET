@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Process.NET.Native.Types;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Assembly.CallingConventions
+namespace ProcessNET.Assembly.CallingConventions
 {
     /// <summary>
     ///     Define the 'This' Calling Convention.

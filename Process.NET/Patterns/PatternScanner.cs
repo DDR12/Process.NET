@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using Process.NET.Memory;
-using Process.NET.Modules;
+using ProcessNET.Memory;
+using ProcessNET.Modules;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Patterns
+namespace ProcessNET.Patterns
 {
     public class PatternScanner : IPatternScanner
     {
@@ -17,6 +18,7 @@ namespace Process.NET.Patterns
         static ConcurrentDictionary<string, CachedPatternScanResult> cache = null;
 
         private readonly IProcessModule _module;
+        public byte[] Data { get; }
 
         public PatternScanner(IProcessModule module)
         {
@@ -28,7 +30,6 @@ namespace Process.NET.Patterns
             cache = new ConcurrentDictionary<string, CachedPatternScanResult>();
         }
 
-        public byte[] Data { get; }
 
         public PatternScanResult Find(IMemoryPattern pattern)
         {
@@ -46,6 +47,55 @@ namespace Process.NET.Patterns
             return pattern.PatternType == MemoryPatternType.Function
                 ? FindFunctionPattern(pattern)
                 : FindDataPattern(pattern);
+        }
+      
+      
+        private int GetOffset(IMemoryPattern pattern)
+        {
+            switch (pattern.Algorithm)
+            {
+                case PatternScannerAlgorithm.Naive:
+                    return StringSearching.Naive.GetIndexOf(pattern, Data, _module, pattern.SearchStartOffset);
+                case PatternScannerAlgorithm.BoyerMooreHorspool:
+                    return StringSearching.BoyerMooreHorspool.IndexOf(Data, pattern.GetBytes().ToArray(), pattern.SearchStartOffset);
+                default:
+                    throw new NotImplementedException($"Unknown search algorithm, please implement it, {pattern.Algorithm}.");
+            }
+        }
+        private PatternScanResult FindFunctionPattern(IMemoryPattern pattern)
+        {
+            int offset = GetOffset(pattern);
+            if (offset < 0)
+                return PatternScanResult.NotFound;
+            PatternScanResult result = new PatternScanResult
+            {
+                BaseAddress = _module.BaseAddress + offset,
+                ReadAddress = _module.BaseAddress + offset,
+                Offset = offset,
+                Found = true
+            };
+            CachePatternScanResult(pattern, result);
+            return result;
+        }
+        private PatternScanResult FindDataPattern(IMemoryPattern pattern)
+        {
+            int offset = GetOffset(pattern);
+            if (offset < 0)
+                return PatternScanResult.NotFound;
+
+            var result = new PatternScanResult();
+            // If this area is reached, the pattern has been found.
+            result.Found = true;
+            result.ReadAddress = _module.Read<IntPtr>(offset);
+            result.BaseAddress = new IntPtr(result.ReadAddress.ToInt64() - _module.BaseAddress.ToInt64());
+            result.Offset = offset;
+            CachePatternScanResult(pattern, result);
+            return result;
+        }
+
+        private string GetPatternCacheKey(IMemoryPattern pattern)
+        {
+            return $"{pattern.ToString()}_{_module.Name}_{_module.Path}_{pattern.SearchStartOffset}";
         }
         private void CachePatternScanResult(IMemoryPattern pattern, PatternScanResult result)
         {
@@ -65,60 +115,6 @@ namespace Process.NET.Patterns
             {
                 return cachedPatternScanResult;
             });
-        }
-        private PatternScanResult FindFunctionPattern(IMemoryPattern pattern)
-        {
-            var patternData = Data;
-            var patternDataLength = patternData.Length;
-
-            for (var offset = 0; offset < patternDataLength; offset++)
-            {
-                if (
-                    pattern.GetMask()
-                        .Where((m, b) => m == 'x' && pattern.GetBytes()[b] != patternData[b + offset])
-                        .Any())
-                    continue;
-
-                PatternScanResult result = new PatternScanResult
-                {
-                    BaseAddress = _module.BaseAddress + offset,
-                    ReadAddress = _module.BaseAddress + offset,
-                    Offset = offset,
-                    Found = true
-                };
-                CachePatternScanResult(pattern, result);
-                return result;
-            }
-            return PatternScanResult.NotFound;
-        }
-
-        private PatternScanResult FindDataPattern(IMemoryPattern pattern)
-        {
-            var patternData = Data;
-            var patternBytes = pattern.GetBytes();
-            var patternMask = pattern.GetMask();
-
-            var result = new PatternScanResult();
-
-            for (var offset = 0; offset < patternData.Length; offset++)
-            {
-                if (patternMask.Where((m, b) => m == 'x' && patternBytes[b] != patternData[b + offset]).Any())
-                    continue;
-                // If this area is reached, the pattern has been found.
-                result.Found = true;
-                result.ReadAddress = _module.Read<IntPtr>(offset + pattern.Offset);
-                result.BaseAddress = new IntPtr(result.ReadAddress.ToInt64() - _module.BaseAddress.ToInt64());
-                result.Offset = offset;
-                CachePatternScanResult(pattern, result);
-                return result;
-            }
-            // If this is reached, the pattern was not found.
-            return PatternScanResult.NotFound;
-        }
-
-        private string GetPatternCacheKey(IMemoryPattern pattern)
-        {
-            return $"{pattern.ToString()}_{_module.Name}_{_module.Path}";
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
-using Process.NET.Memory;
+using ProcessNET.Memory;
 
-namespace Process.NET.Marshaling
+namespace ProcessNET.Marshaling
 {
     /// <summary>
     ///     Interface representing a value within the memory of a remote process.

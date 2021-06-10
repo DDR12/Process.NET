@@ -1,7 +1,7 @@
 ﻿using Binarysharp.Assemblers.Fasm;
 using System;
 
-namespace Process.NET.Assembly.Assemblers
+namespace ProcessNET.Assembly.Assemblers
 {
     /// <summary>
     /// Implement Fasm.NET compiler for 32-bit development.

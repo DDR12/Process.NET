@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Windows.Keyboard
+namespace ProcessNET.Windows.Keyboard
 {
     /// <summary>
     ///     Class defining a virtual keyboard using the API Message.

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Process.NET.Marshaling;
-using Process.NET.Native;
-using Process.NET.Native.Types;
+using ProcessNET.Marshaling;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Utilities
+namespace ProcessNET.Utilities
 {
     /// <summary>
     ///     Static core class providing tools for memory editing.

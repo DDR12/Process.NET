@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using Process.NET.Marshaling;
+using ProcessNET.Marshaling;
 
-namespace Process.NET.Assembly
+namespace ProcessNET.Assembly
 {
     /// <summary>
     ///     Class representing a transaction where the user can insert mnemonics.

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
-using Process.NET.Memory;
-using Process.NET.Utilities;
+using ProcessNET.Memory;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Marshaling
+namespace ProcessNET.Marshaling
 {
     /// <summary>
     ///     Class marshalling a value into the remote process.

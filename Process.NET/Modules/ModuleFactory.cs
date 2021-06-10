@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Process.NET.Memory;
+using ProcessNET.Memory;
 
-namespace Process.NET.Modules
+namespace ProcessNET.Modules
 {
     /// <summary>
     ///     Class providing tools for manipulating modules and libraries.

@@ -1,4 +1,4 @@
-﻿namespace Process.NET.Threads
+﻿namespace ProcessNET.Threads
 {
     /// <summary>
     ///     Class containing a frozen thread. If an instance of this class is disposed, its associated thread is resumed.

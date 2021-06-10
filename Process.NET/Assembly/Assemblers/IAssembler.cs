@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Process.NET.Assembly.Assemblers
+namespace ProcessNET.Assembly.Assemblers
 {
     /// <summary>
     ///     Interface defining an assembler.

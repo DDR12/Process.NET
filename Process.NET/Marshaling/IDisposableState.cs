@@ -1,6 +1,6 @@
 using System;
 
-namespace Process.NET.Marshaling
+namespace ProcessNET.Marshaling
 {
     /// <summary>
     ///     Defines an IDisposable interface with a known state.

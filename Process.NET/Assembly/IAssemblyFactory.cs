@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Process.NET.Assembly.Assemblers;
-using Process.NET.Memory;
+using ProcessNET.Assembly.Assemblers;
+using ProcessNET.Memory;
 
-namespace Process.NET.Assembly
+namespace ProcessNET.Assembly
 {
     public interface IAssemblyFactory : IDisposable
     {

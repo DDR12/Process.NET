@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Process.NET.Memory;
+using ProcessNET.Memory;
 
-namespace Process.NET.Applied.Patches
+namespace ProcessNET.Applied.Patches
 {
     /// <summary>
     ///     Class representing a Memory Patch object.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Process.NET.Applied
+namespace ProcessNET.Applied
 {
     public interface IAppliedManager<T> where T : IApplied
     {

@@ -1,9 +1,9 @@
 ﻿using System.Threading;
-using Process.NET.Native;
-using Process.NET.Native.Types;
-using Process.NET.Utilities;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
+using ProcessNET.Utilities;
 
-namespace Process.NET.Windows.Mouse
+namespace ProcessNET.Windows.Mouse
 {
     /// <summary>
     ///     Class defining a virtual mouse using the API SendInput.

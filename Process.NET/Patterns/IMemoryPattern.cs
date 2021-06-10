@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 
-namespace Process.NET.Patterns
+namespace ProcessNET.Patterns
 {
     public interface IMemoryPattern
     {
-        int Offset { get; }
+        int SearchStartOffset { get; }
         MemoryPatternType PatternType { get; }
+        PatternScannerAlgorithm Algorithm { get; }
         IList<byte> GetBytes();
         string GetMask();
     }

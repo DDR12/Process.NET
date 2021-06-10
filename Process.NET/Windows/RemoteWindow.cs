@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Process.NET.Native.Types;
-using Process.NET.Threads;
-using Process.NET.Utilities;
-using Process.NET.Windows.Keyboard;
-using Process.NET.Windows.Mouse;
+using ProcessNET.Native.Types;
+using ProcessNET.Threads;
+using ProcessNET.Utilities;
+using ProcessNET.Windows.Keyboard;
+using ProcessNET.Windows.Mouse;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     /// <summary>
     ///     Class repesenting a window in the remote process.

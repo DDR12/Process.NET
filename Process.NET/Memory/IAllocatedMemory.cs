@@ -1,6 +1,6 @@
-﻿using Process.NET.Marshaling;
+﻿using ProcessNET.Marshaling;
 
-namespace Process.NET.Memory
+namespace ProcessNET.Memory
 {
     public interface IAllocatedMemory : IPointer, IDisposableState
     {

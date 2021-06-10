@@ -1,11 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using Process.NET.Memory;
+using ProcessNET.Memory;
 
 // ReSharper disable All
 
-namespace Process.NET.Marshaling
+namespace ProcessNET.Marshaling
 {
     /// <summary>
     ///     Static class providing tools for extracting information related to types.

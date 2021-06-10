@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Process.NET.Threads
+namespace ProcessNET.Threads
 {
     public interface IFrozenThread : IDisposable
     {

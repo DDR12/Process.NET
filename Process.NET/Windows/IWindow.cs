@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Process.NET.Native;
-using Process.NET.Native.Types;
-using Process.NET.Threads;
-using Process.NET.Windows.Keyboard;
-using Process.NET.Windows.Mouse;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
+using ProcessNET.Threads;
+using ProcessNET.Windows.Keyboard;
+using ProcessNET.Windows.Mouse;
 
-namespace Process.NET.Windows
+namespace ProcessNET.Windows
 {
     /// <summary>
     ///     An interface that defines operations and values r

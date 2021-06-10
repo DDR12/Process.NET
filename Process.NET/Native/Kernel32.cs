@@ -2,10 +2,10 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
-using Process.NET.Native.Types;
-using Process.NET.Windows;
+using ProcessNET.Native.Types;
+using ProcessNET.Windows;
 
-namespace Process.NET.Native
+namespace ProcessNET.Native
 {
     public static class Kernel32
     {

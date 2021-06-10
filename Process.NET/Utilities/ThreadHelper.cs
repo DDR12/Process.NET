@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using Process.NET.Marshaling;
-using Process.NET.Native;
-using Process.NET.Native.Types;
+using ProcessNET.Marshaling;
+using ProcessNET.Native;
+using ProcessNET.Native.Types;
 
-namespace Process.NET.Utilities
+namespace ProcessNET.Utilities
 {
     /// <summary>
     /// Static core class providing tools for manipulating threads.
