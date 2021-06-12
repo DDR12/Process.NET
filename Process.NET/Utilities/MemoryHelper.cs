@@ -103,7 +103,29 @@ namespace ProcessNET.Utilities
         }
 
         /// <summary>
-        ///     Reads an array of bytes in the memory form the target process.
+        /// Reads an array of bytes in the memory form the target process.
+        /// </summary>
+        /// <param name="processHandle">A handle to the process with memory that is being read.</param>
+        /// <param name="address">A pointer to the base address in the specified process from which to read.</param>
+        /// <param name="buffer">The buffer to read the data onto, it's size determines the count of bytes to read.</param>
+        public static void ReadBytes(SafeMemoryHandle processHandle, IntPtr address, byte[] buffer)
+        {
+            // Check if the handles are valid
+            HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
+            HandleManipulator.ValidateAsArgument(address, "address");
+
+            // Allocate the buffer
+            int nbBytesRead;
+
+            // Read the data from the target process
+            if (Kernel32.ReadProcessMemory(processHandle, address, buffer, buffer.Length, out nbBytesRead) && buffer.Length == nbBytesRead)
+                return;
+
+            // Else the data couldn't be read, throws an exception
+            throw new Win32Exception($"Couldn't read {buffer.Length} byte(s) from 0x{address.ToString("X")}.");
+        }
+        /// <summary>
+        /// Reads an array of bytes in the memory form the target process.
         /// </summary>
         /// <param name="processHandle">A handle to the process with memory that is being read.</param>
         /// <param name="address">A pointer to the base address in the specified process from which to read.</param>
@@ -111,20 +133,9 @@ namespace ProcessNET.Utilities
         /// <returns>The collection of read bytes.</returns>
         public static byte[] ReadBytes(SafeMemoryHandle processHandle, IntPtr address, int size)
         {
-            // Check if the handles are valid
-            HandleManipulator.ValidateAsArgument(processHandle, "processHandle");
-            HandleManipulator.ValidateAsArgument(address, "address");
-
-            // Allocate the buffer
             var buffer = new byte[size];
-            int nbBytesRead;
-
-            // Read the data from the target process
-            if (Kernel32.ReadProcessMemory(processHandle, address, buffer, size, out nbBytesRead) && size == nbBytesRead)
-                return buffer;
-
-            // Else the data couldn't be read, throws an exception
-            throw new Win32Exception($"Couldn't read {size} byte(s) from 0x{address.ToString("X")}.");
+            ReadBytes(processHandle, address, buffer);
+            return buffer;
         }
 
         /// <summary>

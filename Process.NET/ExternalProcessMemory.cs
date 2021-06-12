@@ -31,7 +31,15 @@ namespace ProcessNET.Memory
         {
             return MemoryHelper.ReadBytes(Handle, intPtr, length);
         }
-
+        /// <summary>
+        /// Writes a set of bytes to memory.
+        /// </summary>
+        /// <param name="intPtr">The address where the bytes start in memory.</param>
+        /// <param name="buffer">The buffer to read data onto, it's size determines the count of bytes to read.</param>
+        public override void Read(IntPtr intPtr, byte[] buffer)
+        {
+            MemoryHelper.ReadBytes(Handle, intPtr, buffer);
+        }
         /// <summary>
         ///     Reads the value of a specified type from memory.
         /// </summary>

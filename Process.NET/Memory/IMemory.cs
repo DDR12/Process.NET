@@ -16,6 +16,13 @@ namespace ProcessNET.Memory
         byte[] Read(IntPtr intPtr, int length);
 
         /// <summary>
+        /// Writes a set of bytes to memory.
+        /// </summary>
+        /// <param name="intPtr">The address where the bytes start in memory.</param>
+        /// <param name="buffer">The buffer to read data onto, it's size determines the count of bytes to read.</param>
+        void Read(IntPtr intPtr, byte[] buffer);
+
+        /// <summary>
         ///     Reads a string with a specified encoding from memory.
         /// </summary>
         /// <param name="intPtr">The address where the string is read.</param>
