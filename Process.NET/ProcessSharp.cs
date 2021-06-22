@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using ProcessNET.Extensions;
 using ProcessNET.Memory;
 using ProcessNET.Modules;
 using ProcessNET.Native.Types;
@@ -177,7 +178,72 @@ namespace ProcessNET
         protected virtual void HandleProcessExiting()
         {
         }
+        #region Pointers
+        /// <summary>
+        /// Calculates the final address a pointer is pointing at in a module, knowing it's base address and offsets.
+        /// </summary>
+        /// <param name="moduleName">The module name to calculate the pointer at.</param>
+        /// <param name="baseAddress">The base address of the pointer.</param>
+        /// <param name="offsets">The offsets of the pointer.</param>
+        /// <returns>The final address the pointer is pointing at.</returns>
+        public IntPtr GetPointerAddress(string moduleName, IntPtr baseAddress, params int[] offsets)
+        {
+            if (string.IsNullOrWhiteSpace(moduleName))
+            {
+                throw new ArgumentException($"'{nameof(moduleName)}' cannot be null or whitespace.", nameof(moduleName));
+            }
+            return GetPointerAddress(this[moduleName], baseAddress, offsets);
+        }
+        /// <summary>
+        /// Calculates the final address a pointer is pointing at in a module, knowing it's base address and offsets.
+        /// </summary>
+        /// <param name="module">The module to calculate the pointer at.</param>
+        /// <param name="baseAddress">The base address of the pointer.</param>
+        /// <param name="offsets">The offsets of the pointer.</param>
+        /// <returns>The final address the pointer is pointing at.</returns>
+        public IntPtr GetPointerAddress(IProcessModule module, IntPtr baseAddress, params int[] offsets)
+        {
+            if (module is null)
+            {
+                throw new ArgumentNullException(nameof(module));
+            }
+            IntPtr finalBaseAddress;
+            if (Memory.Is32Bit)
+                finalBaseAddress = module.BaseAddress + baseAddress.ToInt32();
+            else
+                finalBaseAddress = new IntPtr(module.BaseAddress.ToInt64() + baseAddress.ToInt64());
+            return GetPointerAddress(finalBaseAddress, offsets);
+        }
+        /// <summary>
+        /// Calculates the final address a pointer is pointing at, knowing it's base address and offsets.
+        /// </summary>
+        /// <param name="baseAddress">The base address of the pointer.</param>
+        /// <param name="offsets">The offsets of the pointer.</param>
+        /// <returns>The final address the pointer is pointing at.</returns>
+        public IntPtr GetPointerAddress(IntPtr baseAddress, params int[] offsets)
+        {
+            if (baseAddress.MayBeValid() == false)
+                return IntPtr.Zero;
 
+            IntPtr address = baseAddress;
+
+            if (offsets != null && offsets.Length > 0)
+            {
+                for(int i = 0; i < offsets.Length; i++)
+                {
+                    try
+                    {
+                        address = Memory.Read<IntPtr>(address + offsets[i]);
+                    }
+                    catch(Exception ex)
+                    {
+                        return IntPtr.Zero;
+                    }
+                }
+            }
+            return address;
+        }
+        #endregion
         /// <summary>
         ///     Event queue for all listeners interested in ProcessExited events.
         /// </summary>

@@ -5,6 +5,7 @@ namespace ProcessNET.Memory
 {
     public interface IMemory
     {
+        bool Is32Bit { get; }
         /// <summary>
         ///     Writes a set of bytes to memory.
         /// </summary>

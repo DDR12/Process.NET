@@ -39,7 +39,7 @@ namespace ProcessNET.Memory
         /// <summary>
         ///     The address of the pointer in the remote process.
         /// </summary>
-        public IntPtr BaseAddress { get; protected set; }
+        public virtual IntPtr BaseAddress { get; protected set; }
 
         /// <summary>
         ///     Gets if the <see cref="MemoryPointer" /> is valid.

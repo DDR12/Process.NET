@@ -98,6 +98,7 @@
     <Compile Include="Assembly\Assemblers\Fasm32Assembler.cs" />
     <Compile Include="Assembly\AssemblyFactory.cs" />
     <Compile Include="Extensions\IntPtrExtensions.cs" />
+    <Compile Include="Extensions\MemoryResourcesExtensions.cs" />
     <Compile Include="Extensions\NativeExtensions.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\ProcessModuleExtensions.cs" />

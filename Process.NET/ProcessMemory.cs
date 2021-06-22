@@ -25,6 +25,10 @@ namespace ProcessNET.Memory
 
         protected readonly bool is32Bit = false;
         /// <summary>
+        /// Returns the type of the processor architecture of the process.
+        /// </summary>
+        public bool Is32Bit => is32Bit;
+        /// <summary>
         ///     Initializes a new instance of the <see cref="ProcessMemory" /> class.
         /// </summary>
         /// <param name="handle">The open handle to the process which contains the memory of interest.</param>
