@@ -10,14 +10,14 @@ namespace ProcessNET.Memory
     /// <summary>
     /// Extension methods for safe handling of objects allocated in the remote/local memory.
     /// </summary>
-    public class MemoryResourcesExtensions
+    public static class MemoryResourcesExtensions
     {
         /// <summary>
         /// Safely frees up the allocated memory region.
         /// </summary>
         /// <param name="allocatedMemory">The region to free up.</param>
         /// <returns>True if cleaned successfully, false otherwise.</returns>
-        public static bool SafeRelease(IAllocatedMemory allocatedMemory)
+        public static bool SafeRelease(this IAllocatedMemory allocatedMemory)
         {
             try
             {
