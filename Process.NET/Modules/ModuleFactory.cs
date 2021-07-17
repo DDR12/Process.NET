@@ -157,8 +157,9 @@ namespace ProcessNET.Modules
             if (!Path.HasExtension(moduleName))
                 moduleName += ".dll";
 
+            var module = NativeModules.First(m => m.ModuleName.ToLower() == moduleName);
             // Fetch and return the module
-            return new RemoteModule(ProcessPlus, NativeModules.First(m => m.ModuleName.ToLower() == moduleName));
+            return FetchModule(module);
         }
 
         /// <summary>
@@ -168,7 +169,11 @@ namespace ProcessNET.Modules
         /// <returns>A new instance of a <see cref="RemoteModule" /> class.</returns>
         public IProcessModule FetchModule(ProcessModule module)
         {
-            return FetchModule(module.ModuleName);
+            if (module is null)
+            {
+                throw new ArgumentNullException(nameof(module));
+            }
+            return new RemoteModule(ProcessPlus, module);
         }
     }
 }

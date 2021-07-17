@@ -110,12 +110,14 @@ namespace ProcessNET.Assembly
         {
             // If a pointer was specified
             if (Address != IntPtr.Zero)
+            {
                 // If the assembly code must be executed
                 if (IsAutoExecuted)
                     ExitCode = _assemblyFactory.InjectAndExecute<IntPtr>(Mnemonics.ToString(), Address);
                 // Else the assembly code is just injected
                 else
                     _assemblyFactory.Inject(Mnemonics.ToString(), Address);
+            }
 
             // If no pointer was specified and the code assembly code must be executed
             if (Address == IntPtr.Zero && IsAutoExecuted)

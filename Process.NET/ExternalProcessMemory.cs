@@ -69,8 +69,7 @@ namespace ProcessNET.Memory
         /// <param name="bytesToWrite">The array of bytes to write.</param>
         public override int Write(IntPtr intPtr, byte[] bytesToWrite)
         {
-            using (new MemoryProtection(Handle, intPtr,
-                MarshalType<byte>.Size*bytesToWrite.Length))
+            using (new MemoryProtection(Handle, intPtr, MarshalType<byte>.Size * bytesToWrite.Length))
                 MemoryHelper.WriteBytes(Handle, intPtr, bytesToWrite);
             return bytesToWrite.Length;
         }

@@ -3142,4 +3142,14 @@ namespace ProcessNET.Native.Types
         /// </summary>
         Ss
     }
+    /// <summary>
+    /// Module filtering flag.
+    /// </summary>
+    public enum DwModuleFilterFlag : uint
+    {
+        LIST_MODULES_DEFAULT = 0x0,    // This is the default one app would get without any flag.
+        LIST_MODULES_32BIT = 0x01,   // list 32bit modules in the target process.
+        LIST_MODULES_64BIT = 0x02,   // list all 64bit modules. 32bit exe will be stripped off.
+        LIST_MODULES_ALL = (LIST_MODULES_32BIT | LIST_MODULES_64BIT)   // list all the modules
+    }
 }

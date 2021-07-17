@@ -275,9 +275,19 @@ namespace ProcessNET.Assembly
         /// </summary>
         /// <param name="asm">The mnemonics to inject.</param>
         /// <param name="address">The address where the assembly code is injected.</param>
-        public void Inject(string asm, IntPtr address)
+        public bool Inject(string asm, IntPtr address)
         {
-            Process.Memory.Write(address, Assembler.Assemble(asm, address));
+            byte[] bytes = Assembler.Assemble(asm, address);
+
+            try
+            {
+                int injectedCount = Process.Memory.Write(address, bytes);
+                return injectedCount == bytes.Length;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -285,9 +295,9 @@ namespace ProcessNET.Assembly
         /// </summary>
         /// <param name="asm">An array containing the mnemonics to inject.</param>
         /// <param name="address">The address where the assembly code is injected.</param>
-        public void Inject(string[] asm, IntPtr address)
+        public bool Inject(string[] asm, IntPtr address)
         {
-            Inject(string.Join("\n", asm), address);
+           return Inject(string.Join("\n", asm), address);
         }
 
         /// <summary>
@@ -326,7 +336,9 @@ namespace ProcessNET.Assembly
         public T InjectAndExecute<T>(string asm, IntPtr address)
         {
             // Inject the assembly code
-            Inject(asm, address);
+            bool injected = Inject(asm, address);
+            if (!injected)
+                return default;
             // Execute the code
             return Execute<T>(address);
         }

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using ProcessNET.Native;
 
 namespace ProcessNET.Utilities
@@ -89,5 +92,36 @@ namespace ProcessNET.Utilities
                     .Modules.Cast<ProcessModule>()
                     .First(m => m.FileName == libraryPath);
         }
+
+
+        //public class ModuleEx
+        //{
+        //    public string FileName { get; set; }
+        //}
+        //public static ModuleEx[] GetProcessModulesEx(int pid)
+        //{
+        //    var procPtr = Kernel32.OpenProcess(Native.Types.ProcessAccessFlags.AllAccess, false, pid).DangerousGetHandle();
+        //    if (procPtr == IntPtr.Zero)
+        //        return new ModuleEx[0];
+        //    uint[] modsInt = new uint[1024];
+        //    IntPtr[] hMods = new IntPtr[1024];
+        //    GCHandle gch = GCHandle.Alloc(hMods, GCHandleType.Pinned);
+        //    IntPtr pModules = gch.AddrOfPinnedObject();
+        //    uint uiSize = (uint)(Marshal.SizeOf(typeof(IntPtr)) * (hMods.Length));
+        //    List<ModuleEx> result = new List<ModuleEx>();
+        //    uint cbNeeded = 0;
+        //    if(PSAPI.EnumProcessModulesEx(procPtr, pModules, uiSize, out cbNeeded, Native.Types.DwModuleFilterFlag.LIST_MODULES_ALL) == true)
+        //    {
+        //        int uiTotalNumberOfModules = (int)(cbNeeded / (Marshal.SizeOf(typeof(IntPtr))));
+        //        for(int i= 0; i < uiTotalNumberOfModules; i++)
+        //        {
+        //            StringBuilder sb = new StringBuilder(1024);
+        //            PSAPI.GetModuleFileNameEx(procPtr, hMods[i], sb, sb.Capacity);
+        //            string module = sb.ToString();
+        //            result.Add(new ModuleEx() { FileName = module });
+        //        }
+        //    }
+        //    return result.ToArray();
+        //}
     }
 }

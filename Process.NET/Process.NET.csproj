@@ -105,6 +105,7 @@
     <Compile Include="IProcess.cs" />
     <Compile Include="Memory\MemoryType.cs" />
     <Compile Include="Native\DbgHelp.cs" />
+    <Compile Include="Native\PSAPI.cs" />
     <Compile Include="Patterns\PatternScanner.cs" />
     <Compile Include="Patterns\PatternScannerAlgorithm.cs" />
     <Compile Include="ProcessSharp.cs" />

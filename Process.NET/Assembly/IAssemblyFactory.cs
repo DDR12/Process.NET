@@ -32,8 +32,8 @@ namespace ProcessNET.Assembly
 
         IAllocatedMemory Inject(string[] asm);
         IAllocatedMemory Inject(string asm);
-        void Inject(string[] asm, IntPtr address);
-        void Inject(string asm, IntPtr address);
+        bool Inject(string[] asm, IntPtr address);
+        bool Inject(string asm, IntPtr address);
         IntPtr InjectAndExecute(string[] asm);
         IntPtr InjectAndExecute(string asm);
         IntPtr InjectAndExecute(string[] asm, IntPtr address);

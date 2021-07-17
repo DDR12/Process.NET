@@ -10,6 +10,7 @@ namespace ProcessNET.Memory
     public class MemoryProtection : IDisposable
     {
         protected readonly SafeMemoryHandle Handle;
+        private bool isDisposed = false;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MemoryProtection" /> class.
@@ -33,7 +34,6 @@ namespace ProcessNET.Memory
             // Change the memory protection
             OldProtection = MemoryHelper.ChangeProtection(Handle, baseAddress, size, protection);
         }
-
         /// <summary>
         ///     The base address of the altered memory.
         /// </summary>
@@ -59,13 +59,18 @@ namespace ProcessNET.Memory
         /// </summary>
         public int Size { get; }
 
+
         /// <summary>
         ///     Restores the initial protection of the memory.
         /// </summary>
         public virtual void Dispose()
         {
+            if (isDisposed)
+                return;
+            isDisposed = true;
             // Restore the memory protection
             MemoryHelper.ChangeProtection(Handle, BaseAddress, Size, OldProtection);
+
             // Avoid the finalizer 
             GC.SuppressFinalize(this);
         }
